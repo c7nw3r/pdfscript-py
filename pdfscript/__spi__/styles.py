@@ -32,8 +32,6 @@ class TextStyle:
                               fontSize=self.font_size,
                               leading=self.space_after,
                               alignment=self.align.value)
-        # textColor
-        # alignment
 
 
 @dataclass

@@ -21,11 +21,11 @@ class VStack(Writable):
         def space(ops: PDFOpset, pos: PDFPosition):
             spaces = [e for e in evaluations.get_spaces(ops, pos, False)]
 
-            total_gap = self.style.gap * (len(evaluations) - 1)
+            # total_gap = self.style.gap * (len(evaluations) - 1)
             margin = self.style.margin.bottom + self.style.margin.top
 
             width = max([e.width for e in spaces])
-            height = sum([e.height for e in spaces]) + margin + total_gap
+            height = sum([e.height for e in spaces]) + margin + self.style.gap
 
             return Space(width, height)
 
@@ -35,15 +35,13 @@ class VStack(Writable):
 
             index = 0
             for evaluation in evaluations:
-                is_last = index == len(evaluations) - 1
-                height = evaluation.space(ops, pos).height + (0 if is_last else self.style.gap)
+                # is_last = index == len(evaluations) - 1
+                height = evaluation.space(ops, pos).height
 
                 y = pos.y
                 evaluation.instr(ops, pos, evaluation.space)
                 pos.x = x
-
-                if (pos.y - y) < height:
-                    pos.y -= (height - (pos.y - y))
+                pos.y = y - height
 
                 index += 1
 
