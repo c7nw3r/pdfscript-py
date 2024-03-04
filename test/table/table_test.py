@@ -35,8 +35,8 @@ class TableTest(TestCase):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
 
-        row_style = TableRowStyle(gap=20)
-        col_style = TableColStyle(border=LineStyle("black"), gap=20)
+        row_style = TableRowStyle()
+        col_style = TableColStyle(border=LineStyle("black"), gap=10)
 
         table = script.table()
         row1 = table.row(row_style)

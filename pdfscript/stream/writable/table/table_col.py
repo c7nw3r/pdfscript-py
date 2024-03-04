@@ -23,7 +23,7 @@ class TableCol(Writable):
         def get_gap(pos: PDFPosition):
             is_first = pos.x == context.margin.left
             is_last = pos.max_x == context.format.value[0] - context.margin.right
-            return [0 if is_first else self.style.gap / 2, 0 if is_last else self.style.gap / 2]
+            return [0 if is_first else self.style.gap, 0 if is_last else self.style.gap]
 
         def space(ops: PDFOpset, pos: PDFPosition):
             spaces = evaluations.get_spaces(ops, pos)
@@ -31,11 +31,13 @@ class TableCol(Writable):
             top, _, bottom, _ = self.style.margin
             height = sum([e.height for e in spaces]) + top + bottom
 
-            return Space(pos.max_x - pos.x + sum(get_gap(pos)), height)
+            return Space(pos.max_x - pos.x - self.style.gap, height)  # sum(get_gap(pos)), height)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
-            width, _ = get_space(ops, pos)
+            width = get_space(ops, pos).width
             height = pos.y - pos.max_y
+
+            pos.with_x_offset(get_gap(pos)[0])
 
             ops.draw_line(pos.x, pos.y, pos.x + width, pos.y, self.style.border)  # top
             ops.draw_line(pos.x, pos.y, pos.x, pos.y - height, self.style.border)  # left
@@ -43,8 +45,8 @@ class TableCol(Writable):
             ops.draw_line(pos.x, pos.y - height, pos.x + width, pos.y - height, self.style.border)  # bottom
 
             x, y = pos
-            pos.x += self.style.margin.left + get_gap(pos)[0]
-            evaluations.execute(ops, pos.with_max_x(pos.max_x - self.style.margin.right))
+            pos.x += self.style.margin.left
+            evaluations.execute(ops, pos.with_max_x(pos.max_x - self.style.margin.right - self.style.gap))
             pos.move_to(x, y)
 
             pos.x += width + get_gap(pos)[1]
