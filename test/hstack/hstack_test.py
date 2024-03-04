@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from test import get_local_dir
 
 
 class HStackTest(TestCase):
@@ -19,4 +20,4 @@ class HStackTest(TestCase):
         h_stack2.text("Line 2")
 
         script.execute("hstack.pdf", interceptor)
-        interceptor.verify("./test_hstack.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_hstack.txt")

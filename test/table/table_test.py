@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from test import get_local_dir
 
 
 class TableTest(TestCase):
@@ -27,4 +28,4 @@ class TableTest(TestCase):
         row3.col().text("abcd" * 10)
 
         script.execute("table.pdf", interceptor)
-        interceptor.verify("./test_table.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_table.txt")

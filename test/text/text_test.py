@@ -1,11 +1,12 @@
 from unittest import TestCase
 
-from pdfscript.__spi__.styles import TextStyle, Align
+from pdfscript.__spi__.styles import TextStyle
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from test import get_local_dir
 
 
-class SimpleTest(TestCase):
+class TextTest(TestCase):
 
     def test_paragraph(self):
         interceptor = AuditInterceptor()
@@ -14,7 +15,7 @@ class SimpleTest(TestCase):
         script.text("Test asdf" * 20)
 
         script.execute("simple.pdf", interceptor)
-        interceptor.verify("./test_paragraph.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph.txt")
 
     def test_paragraph_with_custom_font(self):
         interceptor = AuditInterceptor()
@@ -23,4 +24,4 @@ class SimpleTest(TestCase):
         script.text("Test asdf" * 20, TextStyle(font_name="Times-Bold", font_size=20))
 
         script.execute("simple.pdf", interceptor)
-        interceptor.verify("./test_paragraph_with_custom_font_justified.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_with_custom_font_justified.txt")

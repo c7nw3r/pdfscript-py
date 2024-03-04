@@ -1,10 +1,10 @@
+from pathlib import Path
 from unittest import TestCase
 
 from pdfscript.__spi__.styles import ImageStyle
 from pdfscript.pdf_script import PDFScript
-from pathlib import Path
-
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from test import get_local_dir
 
 
 class ImageTest(TestCase):
@@ -18,4 +18,4 @@ class ImageTest(TestCase):
         script.image(path, ImageStyle(width=50, height=30))
 
         script.execute("image.pdf", interceptor)
-        interceptor.verify("./test_image.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_image.txt")

@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from test import get_local_dir
 
 
 class VStackTest(TestCase):
@@ -15,4 +16,4 @@ class VStackTest(TestCase):
         v_stack.text("Line 2")
 
         script.execute("vstack.pdf", interceptor)
-        interceptor.verify("./test_vstack.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_vstack.txt")

@@ -1,0 +1,2 @@
+add_text("Line 1", 72.0, 769.8897637795277, TextStyle(font_name='Courier', font_size=14, align=<Align.LEFT: 0>, color=None, margin=Margin(top=0, right=0, bottom=0, left=0), line_clamp=None))
+add_text("Line 2", 72.0, 741.3857637795277, TextStyle(font_name='Courier', font_size=14, align=<Align.LEFT: 0>, color=None, margin=Margin(top=0, right=0, bottom=0, left=0), line_clamp=None))
