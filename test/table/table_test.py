@@ -36,7 +36,7 @@ class TableTest(TestCase):
         script = PDFScript.a4()
 
         row_style = TableRowStyle(gap=20)
-        col_style = TableColStyle(border=LineStyle("white"))
+        col_style = TableColStyle(border=LineStyle("black"), gap=20)
 
         table = script.table()
         row1 = table.row(row_style)

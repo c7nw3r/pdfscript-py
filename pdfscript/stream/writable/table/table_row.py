@@ -19,10 +19,11 @@ class TableRow(Writable):
         evaluations = writer.write()
 
         def space(ops: PDFOpset, pos: PDFPosition):
-            new_pos = pos.with_max_x(pos.x + pos.max_x / len(evaluations))
+            new_pos = pos.with_max_x(pos.x + (pos.max_x - pos.min_x) / len(evaluations))
 
             def postprocess(_pos: PDFPosition, _space: Space):
-                _pos.max_x += pos.max_x / len(evaluations)
+                _pos.max_x += ((pos.max_x - pos.min_x) / len(evaluations))
+                _pos.x += ((pos.max_x - pos.min_x) / len(evaluations))
 
             spaces = evaluations.get_spaces(ops, new_pos, True, False, postprocess)
             return Space(pos.max_x, max([e.height for e in spaces]))

@@ -71,8 +71,9 @@ class LineStyle:
 
 @dataclass
 class TableColStyle:
-    margin: Margin = Margin(5, 2, 5, 2)
+    margin: Margin = Margin(5, 5, 5, 5)
     border: LineStyle = LineStyle()
+    gap: Number = 0
 
 
 @dataclass
