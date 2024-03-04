@@ -14,34 +14,31 @@ class TableCol(Writable):
         self.style = style
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
-        new_style = {}
-        new_context = PDFContext(context.page_format, context.page_margin)
-
-        # const newStyles = {...context.styles, ...{margin: {left: 2}}}
-        # const newContext = new Context(context.format, context.margin, newStyles)
+        new_context = PDFContext(context.format, context.margin)
 
         writer = PDFWriter(new_context)
         writer.objects = self.configurer.objects
         evaluations = writer.write()
 
         def space(ops: PDFOpset, pos: PDFPosition):
+            is_first = pos.x == context.margin.left
+            is_last = pos.max_x == context.format.value[0] - context.margin.right
+
             spaces = evaluations.get_spaces(ops, pos)
 
-            margin = self.style.margin
-            height = sum([e.height for e in spaces]) + margin.top + margin.bottom
+            top, _, bottom, _ = self.style.margin
+            height = sum([e.height for e in spaces]) + top + bottom
 
             return Space(pos.max_x - pos.x, height)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
-            # border = None
-
             width, _ = get_space(ops, pos)
             height = pos.y - pos.max_y
 
-            ops.draw_line(pos.x, pos.y, pos.x + width, pos.y)  # top
-            ops.draw_line(pos.x, pos.y, pos.x, pos.y - height)  # left
-            ops.draw_line(pos.x + width, pos.y, pos.x + width, pos.y - height)  # right
-            ops.draw_line(pos.x, pos.y - height, pos.x + width, pos.y - height)  # bottom
+            ops.draw_line(pos.x, pos.y, pos.x + width, pos.y, self.style.border)  # top
+            ops.draw_line(pos.x, pos.y, pos.x, pos.y - height, self.style.border)  # left
+            ops.draw_line(pos.x + width, pos.y, pos.x + width, pos.y - height, self.style.border)  # right
+            ops.draw_line(pos.x, pos.y - height, pos.x + width, pos.y - height, self.style.border)  # bottom
 
             x, y = pos
             pos.x += self.style.margin.left

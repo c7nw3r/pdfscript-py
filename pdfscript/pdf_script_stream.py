@@ -4,8 +4,8 @@ from reportlab.pdfgen.canvas import Canvas
 
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_opset import PDFOpset
-from pdfscript.__spi__.styles import ImageStyle, LineStyle
-from pdfscript.__spi__.types import PDFPosition, Number
+from pdfscript.__spi__.styles import ImageStyle, LineStyle, RectStyle
+from pdfscript.__spi__.types import Number, PDFCoords
 from pdfscript.stream.writable.text import TextStyle
 
 
@@ -16,7 +16,7 @@ class PDFScriptStream(PDFOpset):
         self.context = context
         self.interceptor = interceptor
 
-    def add_text(self, text: str, box: PDFPosition, style: TextStyle):
+    def add_text(self, text: str, box: PDFCoords, style: TextStyle):
         self.interceptor.add_text(text, box, style)
 
         from reportlab.platypus import Paragraph
@@ -25,7 +25,7 @@ class PDFScriptStream(PDFOpset):
         w, h = paragraph.wrap(box.max_x - box.x, box.y - box.min_y)
         paragraph.drawOn(self.canvas, box.x, box.y - h)
 
-    def add_image(self, src: str, box: PDFPosition, style: ImageStyle):
+    def add_image(self, src: str, box: PDFCoords, style: ImageStyle):
         self.interceptor.add_image(src, box, style)
         self.canvas.drawImage(src, box.x, box.y - style.height, style.width, style.height, mask="auto")
 
@@ -40,11 +40,22 @@ class PDFScriptStream(PDFOpset):
         if style.stroke_color:
             self.canvas.setStrokeColor("black", 1)
 
+    def draw_rect(self, x1: Number, y1: Number, x2: Number, y2: Number, style: RectStyle = RectStyle()):
+        self.interceptor.draw_rect(x1, y1, x2, y2, style)
+
+        if style.stroke_color:
+            self.canvas.setStrokeColor(style.stroke_color, style.stroke_opacity)
+
+        self.canvas.rect(x1, y1, x2, y2)
+
+        if style.stroke_color:
+            self.canvas.setStrokeColor("black", 1)
+
     def get_width_of_text(self, text: str, font_name: str, font_size: int, consider_overflow: bool = True):
         self.interceptor.get_width_of_text(text, font_name, font_size, consider_overflow)
 
         from reportlab.pdfbase.pdfmetrics import stringWidth
-        max_x, _ = self.context.page_format.value
+        max_x, _ = self.context.format.value
         width = stringWidth(text, font_name, font_size)
 
         return min(width, max_x) if consider_overflow else width
@@ -55,7 +66,7 @@ class PDFScriptStream(PDFOpset):
         import math
         from reportlab.pdfbase import pdfmetrics
 
-        max_x = max_x or self.context.page_format.value[0]
+        max_x = max_x or self.context.format.value[0]
         width = self.get_width_of_text(text, style.font_name, style.font_size, consider_overflow=False)
         lines = math.ceil(width / max_x)
 

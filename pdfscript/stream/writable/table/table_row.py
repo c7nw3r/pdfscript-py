@@ -2,14 +2,14 @@ from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
 from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
-from pdfscript.__spi__.styles import TableStyle
+from pdfscript.__spi__.styles import TableRowStyle
 from pdfscript.__spi__.types import PDFPosition, Space
 from pdfscript.stream.writable.table.table_col_writer import TableColWriter
 
 
 class TableRow(Writable):
 
-    def __init__(self, configurer: TableColWriter, style: TableStyle):
+    def __init__(self, configurer: TableColWriter, style: TableRowStyle):
         self.configurer = configurer
         self.style = style
 

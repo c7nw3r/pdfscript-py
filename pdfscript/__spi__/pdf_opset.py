@@ -1,22 +1,26 @@
 from abc import abstractmethod
 from typing import Optional, Protocol
 
-from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle
-from pdfscript.__spi__.types import PDFPosition, Number
+from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle, RectStyle
+from pdfscript.__spi__.types import Number, PDFCoords
 
 
 class PDFOpset(Protocol):
 
     @abstractmethod
-    def add_text(self, text: str, box: PDFPosition, styling: TextStyle):
+    def add_text(self, text: str, coords: PDFCoords, styling: TextStyle):
         pass
 
     @abstractmethod
-    def add_image(self, src: str, box: PDFPosition, styling: ImageStyle):
+    def add_image(self, src: str, coords: PDFCoords, styling: ImageStyle):
         pass
 
     @abstractmethod
     def draw_line(self, x1: Number, y1: Number, x2: Number, y2: Number, style: LineStyle = LineStyle()):
+        pass
+
+    @abstractmethod
+    def draw_rect(self, x1: Number, y1: Number, x2: Number, y2: Number, style: RectStyle = RectStyle()):
         pass
 
     @abstractmethod

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Union
 
 Number = Union[int, float]
 
@@ -14,8 +14,15 @@ class Space:
         yield self.height
 
 
-class PDFPosition:
+@dataclass
+class PDFCoords:
+    x: Number
+    y: Number
+
+
+class PDFPosition(PDFCoords):
     def __init__(self, x: int, y: int, min_x: int, min_y: int, max_x: int, max_y: int):
+        super().__init__(x, y)
         self.x = x
         self.y = y
         self.min_x = min_x
@@ -50,9 +57,20 @@ class PDFPosition:
         yield self.x
         yield self.y
 
+
 @dataclass
 class Margin:
-    top: Optional[float]
-    right: Optional[float]
-    bottom: Optional[float]
-    left: Optional[float]
+    """
+    Dataclass used to specify the amount of margin of a writable.
+    """
+
+    top: Number = 0
+    right: Number = 0
+    bottom: Number = 0
+    left: Number = 0
+
+    def __iter__(self):
+        yield self.top
+        yield self.right
+        yield self.bottom
+        yield self.left

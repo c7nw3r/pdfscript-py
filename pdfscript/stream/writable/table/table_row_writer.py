@@ -2,10 +2,11 @@ from typing import Callable
 
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
-from pdfscript.__spi__.styles import TableStyle
+from pdfscript.__spi__.styles import TableRowStyle
 from pdfscript.stream.writable.table.table_col_writer import TableColWriter
 
 TableRowConfigurer = Callable[['TableRowWriter'], None]
+
 
 class TableRowWriter:
 
@@ -16,9 +17,9 @@ class TableRowWriter:
     def write(self) -> PDFEvaluations:
         return PDFEvaluations([e.evaluate(self.context) for e in self.objects])
 
-    def row(self):
+    def row(self, style: TableRowStyle = TableRowStyle()):
         from pdfscript.stream.writable.table.table_row import TableRow
 
         configurer = TableColWriter(self.context)
-        self.objects.append(TableRow(configurer, TableStyle()))
+        self.objects.append(TableRow(configurer, style))
         return configurer

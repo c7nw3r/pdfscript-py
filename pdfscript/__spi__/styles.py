@@ -40,6 +40,7 @@ class ImageStyle:
     height: int = 100
     align: Align = Align.CENTER
     display: Optional[Literal["block"]] = None
+    margin: Margin = Margin(0, 0, 0, 0)
 
 
 @dataclass
@@ -57,18 +58,25 @@ class VStackStyle:
 
 
 @dataclass
-class TableStyle:
+class TableRowStyle:
     gap: Number = 0
     margin: Margin = Margin(0, 0, 0, 0)
 
 
 @dataclass
-class TableColStyle:
-    margin: Margin = Margin(5, 2, 5, 2)
+class LineStyle:
+    stroke_color: Optional[str] = None
+    stroke_opacity: float = 1
 
 
 @dataclass
-class LineStyle:
+class TableColStyle:
+    margin: Margin = Margin(5, 2, 5, 2)
+    border: LineStyle = LineStyle()
+
+
+@dataclass
+class RectStyle:
     stroke_color: Optional[str] = None
     stroke_opacity: float = 1
     fill_color: Optional[str] = None

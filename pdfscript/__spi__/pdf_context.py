@@ -4,6 +4,7 @@ from enum import Enum
 from reportlab.lib import pagesizes
 from reportlab.lib.units import inch
 
+
 class PageFormat(Enum):
     # ISO 216 standard page formats; see eg https://en.wikipedia.org/wiki/ISO_216
     A0 = pagesizes.A0
@@ -82,5 +83,5 @@ class PageMargin:
 
 @dataclass
 class PDFContext:
-    page_format: PageFormat
-    page_margin: PageMargin
+    format: PageFormat
+    margin: PageMargin

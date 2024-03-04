@@ -32,7 +32,7 @@ class Text(Writable):
                 if (pos.y - height) < pos.min_y:  # page overflow
                     ops.add_page()
                     pos.y = pos.min_y
-                    pos.x = context.page_margin.left
+                    pos.x = context.margin.left
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 else:
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
