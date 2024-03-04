@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Callable, List
 
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation
-from pdfscript.__spi__.types import BoundingBox, Space
+from pdfscript.__spi__.pdf_opset import PDFOpset
+from pdfscript.__spi__.types import PDFPosition, Space
 
 
 class Writable(ABC):
@@ -19,11 +19,11 @@ class PDFEvaluations:
         self.evaluations = evaluations
 
     def get_spaces(self,
-                   stream: PDFApi,
-                   box: BoundingBox,
+                   stream: PDFOpset,
+                   box: PDFPosition,
                    x_offset: bool = True,
                    y_offset: bool = True,
-                   postprocess: Callable[[BoundingBox, Space], None] = lambda x, y: None):
+                   postprocess: Callable[[PDFPosition, Space], None] = lambda x, y: None):
 
         copy = box.copy()
 
@@ -42,8 +42,8 @@ class PDFEvaluations:
         return [to_space(e) for e in self.evaluations]
 
     def execute(self,
-                stream: PDFApi,
-                box: BoundingBox,
+                stream: PDFOpset,
+                box: PDFPosition,
                 postprocess: Callable[[], None] = lambda: None):
         for evaluation in self.evaluations:
             evaluation.instr(stream, box, evaluation.space)

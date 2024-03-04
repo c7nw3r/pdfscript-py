@@ -1,33 +1,33 @@
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
 from pdfscript.__spi__.styles import TableStyle
-from pdfscript.__spi__.types import BoundingBox, Space
-from pdfscript.stream.writable.table.table_col_writer import TableColWriter, TableColConfigurer
+from pdfscript.__spi__.types import PDFPosition, Space
+from pdfscript.stream.writable.table.table_col_writer import TableColWriter
 
 
 class TableRow(Writable):
 
-    def __init__(self, configurer: TableColConfigurer, style: TableStyle):
+    def __init__(self, configurer: TableColWriter, style: TableStyle):
         self.configurer = configurer
         self.style = style
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         writer = TableColWriter(context)
-        self.configurer(writer)
+        writer.objects = self.configurer.objects
         evaluations = writer.write()
 
-        def space(ops: PDFApi, pos: BoundingBox):
+        def space(ops: PDFOpset, pos: PDFPosition):
             new_pos = pos.with_max_x(pos.x + pos.max_x / len(evaluations))
 
-            def postprocess(_pos: BoundingBox, _space: Space):
+            def postprocess(_pos: PDFPosition, _space: Space):
                 _pos.max_x += pos.max_x / len(evaluations)
 
             spaces = evaluations.get_spaces(ops, new_pos, True, False, postprocess)
             return Space(pos.max_x, max([e.height for e in spaces]))
 
-        def instr(ops: PDFApi, pos: BoundingBox, get_space: SpaceSupplier):
+        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             _, height = get_space(ops, pos.with_max_x(pos.max_x / len(evaluations)))
 
             if (pos.y - height) < pos.min_y:

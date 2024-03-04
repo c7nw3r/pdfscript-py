@@ -40,7 +40,7 @@ class TextStyle:
 class ImageStyle:
     width: int = 100
     height: int = 100
-    align: Optional[Literal["center"]] = None
+    align: Align = Align.CENTER
     display: Optional[Literal["block"]] = None
 
 
@@ -48,13 +48,14 @@ class ImageStyle:
 class HStackStyle:
     align: Optional[Literal['center', 'justify', 'left', 'right']] = None
     margin: Margin = Margin(0, 0, 0, 0)
-    gap: Number = 0
+    gap: Number = 10
 
 
 @dataclass
 class VStackStyle:
-    gap: Number = 0
+    gap: Number = 10
     margin: Margin = Margin(0, 0, 0, 0)
+    align: Align = Align.LEFT
 
 
 @dataclass

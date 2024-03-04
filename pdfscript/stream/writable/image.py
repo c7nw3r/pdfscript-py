@@ -1,9 +1,9 @@
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
-from pdfscript.__spi__.styles import ImageStyle
-from pdfscript.__spi__.types import Space, BoundingBox
+from pdfscript.__spi__.styles import ImageStyle, Align
+from pdfscript.__spi__.types import Space, PDFPosition
 
 
 class Image(Writable):
@@ -12,22 +12,22 @@ class Image(Writable):
         self.style = style
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
-        def space(_api: PDFApi, _box: BoundingBox):
+        def space(_ops: PDFOpset, _pos: PDFPosition):
             return Space(self.style.width, self.style.height)
 
-        def instr(api: PDFApi, box: BoundingBox, get_space: SpaceSupplier):
-            width, height = get_space(api, box)
+        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
+            width, height = get_space(ops, pos)
 
-            x = box.x
-            if self.style.align == "center":
-                x += ((box.max_x - box.min_x) / 2) - (width / 2)
+            x = pos.x
+            if self.style.align == Align.CENTER:
+                x += ((pos.max_x - pos.min_x) / 2) - (width / 2)
 
-            api.add_image(self.src, box, self.style)
+            ops.add_image(self.src, pos, self.style)
 
             if self.style.display == "block":
-                box.x = box.min_x
-                box.y += height
+                pos.x = pos.min_x
+                pos.y += height
             else:
-                box.x = x + width
+                pos.x = x + width
 
         return PDFEvaluation(space, instr)

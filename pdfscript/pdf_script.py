@@ -1,18 +1,16 @@
-from typing import Optional
+from reportlab.pdfgen import canvas
 
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext, PageMargin, PageFormat
 from pdfscript.__spi__.pdf_font_registry import PDFFontRegistry
 from pdfscript.__spi__.pdf_interceptor import DevNullInterceptor
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter
-from pdfscript.__spi__.pdf_writer_api import Configurer
-from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, TableStyle, LineStyle
-from pdfscript.__spi__.types import BoundingBox
+from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, TableStyle
+from pdfscript.__spi__.types import PDFPosition
 from pdfscript.pdf_script_stream import PDFScriptStream
-from pdfscript.stream.writable.table.table_row_writer import TableRowConfigurer
+from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle
-from reportlab.pdfgen import canvas
 
 
 class PDFScript:
@@ -34,16 +32,22 @@ class PDFScript:
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.center_writer.image(src, style)
 
-    def vstack(self, configurer: Configurer, style: VStackStyle = VStackStyle()):
-        self.center_writer.vstack(configurer, style)
+    def v_stack(self, style: VStackStyle = VStackStyle()):
+        configurer = PDFWriter(self.context)
+        self.center_writer.v_stack(configurer, style)
+        return configurer
 
-    def hstack(self, configurer: Configurer, style: HStackStyle = HStackStyle()):
-        self.center_writer.hstack(configurer, style)
+    def h_stack(self, style: HStackStyle = HStackStyle()):
+        configurer = PDFWriter(self.context)
+        self.center_writer.h_stack(configurer, style)
+        return configurer
 
-    def table(self, configurer: TableRowConfigurer, style: TableStyle = TableStyle()):
+    def table(self, style: TableStyle = TableStyle()):
+        configurer = TableRowWriter(self.context)
         self.center_writer.table(configurer, style)
+        return configurer
 
-    def execute(self, path: str, interceptor: PDFApi = DevNullInterceptor()):
+    def execute(self, path: str, interceptor: PDFOpset = DevNullInterceptor()):
         file_name = path[max(0, path.rfind("/")):]
         document = canvas.Canvas(file_name)
 
@@ -67,23 +71,24 @@ class PDFScript:
         # stream.draw_line(0, hy, width, hy, LineStyle(stroke_color="red"))
 
         available_center_height = height - hy - fy
+
         # stream.putPDFValue("totalPages", Math.max(Math.ceil(ch / availableCenterHeight), 1))
 
         def render_header():
-            box = BoundingBox(l, h, l, h, width - r, hh)
-            return header_eval.execute(stream, box)
+            pos = PDFPosition(l, h, l, h, width - r, hh)
+            return header_eval.execute(stream, pos)
 
         def render_center():
-            box = BoundingBox(l, hy, l, fy, width - r, hy)
-            return center_eval.execute(stream, box)
+            pos = PDFPosition(l, hy, l, fy, width - r, hy)
+            return center_eval.execute(stream, pos)
 
         def render_footer():
-            box = BoundingBox(l, height - fh - f, l, height - fh - f, width - r, height - f)
-            return footer_eval.execute(stream, box)
+            pos = PDFPosition(l, height - fh - f, l, height - fh - f, width - r, height - f)
+            return footer_eval.execute(stream, pos)
 
         def render_canvas():
-            box = BoundingBox(0, 0, 0, 0, width, height)
-            return canvas_eval.execute(stream, box)
+            pos = PDFPosition(0, 0, 0, 0, width, height)
+            return canvas_eval.execute(stream, pos)
 
         render_header()
         render_center()
@@ -93,5 +98,5 @@ class PDFScript:
         document.save()
 
     def _calc_height(self, evals: PDFEvaluations, stream: PDFScriptStream, max_x: int):
-        zero = BoundingBox(0, 0, 0, 0, max_x, 1000)
+        zero = PDFPosition(0, 0, 0, 0, max_x, 1000)
         return sum([e.space(stream, zero).height for e in evals])

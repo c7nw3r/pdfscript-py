@@ -1,20 +1,20 @@
 from typing import Optional
 
-from pdfscript.__spi__.pdf_api import PDFApi
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.styles import TextStyle, LineStyle, ImageStyle
-from pdfscript.__spi__.types import Number, BoundingBox
+from pdfscript.__spi__.types import Number, PDFPosition
 
 
-class AuditInterceptor(PDFApi):
+class AuditInterceptor(PDFOpset):
 
     def __init__(self):
         super().__init__()
         self.audit_log = []
 
-    def add_text(self, text: str, box: BoundingBox, styling: TextStyle):
+    def add_text(self, text: str, box: PDFPosition, styling: TextStyle):
         self.audit_log.append(f'add_text("{text}", {box.x}, {box.y}, {styling})')
 
-    def add_image(self, src: str, box: BoundingBox, styling: ImageStyle):
+    def add_image(self, src: str, box: PDFPosition, styling: ImageStyle):
         self.audit_log.append(f'add_image("{src[src.rfind("/") + 1:]}", {box.x}, {box.y}, {styling})')
 
     def draw_line(self, x1: Number, y1: Number, x2: Number, y2: Number, style: LineStyle = LineStyle()):

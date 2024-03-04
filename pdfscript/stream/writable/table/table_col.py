@@ -1,16 +1,15 @@
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
 from pdfscript.__spi__.pdf_writer import PDFWriter
-from pdfscript.__spi__.pdf_writer_api import Configurer
 from pdfscript.__spi__.styles import TableColStyle
-from pdfscript.__spi__.types import BoundingBox, Space
+from pdfscript.__spi__.types import PDFPosition, Space
 
 
 class TableCol(Writable):
 
-    def __init__(self, configurer: Configurer, style: TableColStyle):
+    def __init__(self, configurer: PDFWriter, style: TableColStyle):
         self.configurer = configurer
         self.style = style
 
@@ -22,10 +21,10 @@ class TableCol(Writable):
         # const newContext = new Context(context.format, context.margin, newStyles)
 
         writer = PDFWriter(new_context)
-        self.configurer(writer)
+        writer.objects = self.configurer.objects
         evaluations = writer.write()
 
-        def space(ops: PDFApi, pos: BoundingBox):
+        def space(ops: PDFOpset, pos: PDFPosition):
             spaces = evaluations.get_spaces(ops, pos)
 
             margin = self.style.margin
@@ -33,7 +32,7 @@ class TableCol(Writable):
 
             return Space(pos.max_x - pos.x, height)
 
-        def instr(ops: PDFApi, pos: BoundingBox, get_space: SpaceSupplier):
+        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             # border = None
 
             width, _ = get_space(ops, pos)

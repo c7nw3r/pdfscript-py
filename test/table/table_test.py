@@ -1,11 +1,7 @@
 from unittest import TestCase
 
-from pdfscript.__spi__.pdf_writer import PDFWriter
-from pdfscript.__spi__.pdf_writer_api import PDFWriterApi
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
-from pdfscript.stream.writable.table.table_col_writer import TableColWriter
-from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 
 
 class TableTest(TestCase):
@@ -14,21 +10,21 @@ class TableTest(TestCase):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
 
-        def col(writer: PDFWriterApi):
-            writer.text("abcd" * 10)
+        table = script.table()
+        row1 = table.row()
+        row1.col().text("abcd" * 10)
+        row1.col().text("abcd" * 10)
+        row1.col().text("abcd" * 10)
 
-        def row(col_writer: TableColWriter):
-            col_writer.col(col)
-            col_writer.col(col)
-            col_writer.col(col)
+        row2 = table.row()
+        row2.col().text("abcd" * 10)
+        row2.col().text("abcd" * 10)
+        row2.col().text("abcd" * 10)
 
-        def table(writer: TableRowWriter):
-            writer.row(row)
-            writer.row(row)
-            writer.row(row)
-
-        script.table(table)
-        # script.text("abcd")
+        row3 = table.row()
+        row3.col().text("abcd" * 10)
+        row3.col().text("abcd" * 10)
+        row3.col().text("abcd" * 10)
 
         script.execute("table.pdf", interceptor)
         interceptor.verify("./test_table.txt")

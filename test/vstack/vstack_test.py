@@ -1,7 +1,5 @@
 from unittest import TestCase
 
-from pdfscript.__spi__.pdf_context import PDFContext
-from pdfscript.__spi__.pdf_writer import PDFWriter
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
 
@@ -12,11 +10,9 @@ class VStackTest(TestCase):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
 
-        def vstack_configurer(writer: PDFWriter):
-            writer.text("Line 1")
-            writer.text("Line 2")
-
-        script.vstack(vstack_configurer)
+        v_stack = script.v_stack()
+        v_stack.text("Line 1")
+        v_stack.text("Line 2")
 
         script.execute("vstack.pdf", interceptor)
         interceptor.verify("./test_vstack.txt")

@@ -2,21 +2,21 @@ from typing import Optional
 
 from reportlab.pdfgen.canvas import Canvas
 
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.styles import ImageStyle, LineStyle
-from pdfscript.__spi__.types import BoundingBox, Number
+from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.stream.writable.text import TextStyle
 
 
-class PDFScriptStream(PDFApi):
+class PDFScriptStream(PDFOpset):
 
-    def __init__(self, canvas: Canvas, context: PDFContext, interceptor: PDFApi):
+    def __init__(self, canvas: Canvas, context: PDFContext, interceptor: PDFOpset):
         self.canvas = canvas
         self.context = context
         self.interceptor = interceptor
 
-    def add_text(self, text: str, box: BoundingBox, style: TextStyle):
+    def add_text(self, text: str, box: PDFPosition, style: TextStyle):
         self.interceptor.add_text(text, box, style)
 
         from reportlab.platypus import Paragraph
@@ -25,7 +25,7 @@ class PDFScriptStream(PDFApi):
         w, h = paragraph.wrap(box.max_x - box.x, box.y - box.min_y)
         paragraph.drawOn(self.canvas, box.x, box.y - h)
 
-    def add_image(self, src: str, box: BoundingBox, style: ImageStyle):
+    def add_image(self, src: str, box: PDFPosition, style: ImageStyle):
         self.interceptor.add_image(src, box, style)
         self.canvas.drawImage(src, box.x, box.y - style.height, style.width, style.height, mask="auto")
 

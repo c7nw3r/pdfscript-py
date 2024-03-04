@@ -16,7 +16,7 @@ class PDFWriterApi(ABC):
         pass
 
     @abstractmethod
-    def vstack(self, configurer: 'Configurer', style: VStackStyle = VStackStyle()):
+    def v_stack(self, configurer: 'Configurer', style: VStackStyle = VStackStyle()):
         pass
 
     @abstractmethod

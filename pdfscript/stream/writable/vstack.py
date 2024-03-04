@@ -1,25 +1,24 @@
-from pdfscript.__spi__.pdf_api import PDFApi
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
+from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
 from pdfscript.__spi__.pdf_writer import PDFWriter
-from pdfscript.__spi__.pdf_writer_api import Configurer
-from pdfscript.__spi__.styles import HStackStyle
-from pdfscript.__spi__.types import BoundingBox, Space
+from pdfscript.__spi__.styles import VStackStyle
+from pdfscript.__spi__.types import PDFPosition, Space
 
 
 class VStack(Writable):
 
-    def __init__(self, configurer: Configurer, style: HStackStyle):
+    def __init__(self, configurer: PDFWriter, style: VStackStyle):
         self.configurer = configurer
         self.style = style
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         writer = PDFWriter(context)
-        self.configurer(writer)
+        writer.objects = self.configurer.objects
         evaluations = writer.write()
 
-        def space(ops: PDFApi, pos: BoundingBox):
+        def space(ops: PDFOpset, pos: PDFPosition):
             spaces = [e for e in evaluations.get_spaces(ops, pos, False)]
 
             total_gap = self.style.gap * (len(evaluations) - 1)
@@ -30,7 +29,7 @@ class VStack(Writable):
 
             return Space(width, height)
 
-        def instr(ops: PDFApi, pos: BoundingBox, _get_space: SpaceSupplier):
+        def instr(ops: PDFOpset, pos: PDFPosition, _get_space: SpaceSupplier):
             x = pos.x
             pos.move_y_offset(self.style.margin.top)
 
@@ -44,7 +43,7 @@ class VStack(Writable):
                 pos.x = x
 
                 if (pos.y - y) < height:
-                    pos.y += (height - (pos.y - y))
+                    pos.y -= (height - (pos.y - y))
 
                 index += 1
 
