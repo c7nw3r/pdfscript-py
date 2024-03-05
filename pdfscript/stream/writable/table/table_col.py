@@ -1,17 +1,19 @@
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
-from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
 from pdfscript.__spi__.pdf_writer import PDFWriter
+from pdfscript.__spi__.protocols import PDFOpset, PDFListener
 from pdfscript.__spi__.styles import TableColStyle
-from pdfscript.__spi__.types import PDFPosition, Space
+from pdfscript.__spi__.types import PDFPosition, Space, BoundingBox
+from pdfscript.stream.listener.noop_listener import NoOpListener
 
 
 class TableCol(Writable):
 
-    def __init__(self, configurer: PDFWriter, style: TableColStyle):
+    def __init__(self, configurer: PDFWriter, style: TableColStyle, listener: PDFListener = NoOpListener()):
         self.configurer = configurer
         self.style = style
+        self.listener = listener
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         new_context = PDFContext(context.format, context.margin)
@@ -31,12 +33,12 @@ class TableCol(Writable):
             top, _, bottom, _ = self.style.margin
             height = sum([e.height for e in spaces]) + top + bottom
 
-            return Space(pos.max_x - pos.x - self.style.gap, height)  # sum(get_gap(pos)), height)
+            return Space(pos.max_x - pos.x - self.style.gap, height).emit(self.listener)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
-            width = get_space(ops, pos).width
-            height = pos.y - pos.max_y
+            width, height = get_space(ops, pos)
 
+            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
             pos.with_x_offset(get_gap(pos)[0])
 
             ops.draw_line(pos.x, pos.y, pos.x + width, pos.y, self.style.border)  # top
@@ -50,5 +52,6 @@ class TableCol(Writable):
             pos.move_to(x, y)
 
             pos.x += width + get_gap(pos)[1]
+            return bbox.emit(self.listener)
 
         return PDFEvaluation(space, instr)

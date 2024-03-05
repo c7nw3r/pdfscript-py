@@ -1,6 +1,6 @@
 from typing import Callable
 
-from pdfscript.__spi__.pdf_opset import PDFOpset
+from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.types import PDFPosition, Space
 
 ExecutionSpace = Callable[[PDFOpset, PDFPosition], Space]

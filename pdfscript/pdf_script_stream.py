@@ -3,7 +3,7 @@ from typing import Optional
 from reportlab.pdfgen.canvas import Canvas
 
 from pdfscript.__spi__.pdf_context import PDFContext
-from pdfscript.__spi__.pdf_opset import PDFOpset
+from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import ImageStyle, LineStyle, RectStyle
 from pdfscript.__spi__.types import Number, PDFCoords
 from pdfscript.stream.writable.text import TextStyle
@@ -46,32 +46,29 @@ class PDFScriptStream(PDFOpset):
         if style.stroke_color:
             self.canvas.setStrokeColor(style.stroke_color, style.stroke_opacity)
 
-        self.canvas.rect(x1, y1, x2, y2)
+        self.canvas.rect(x1, y1, x2 - x1, y2 - y1)
 
         if style.stroke_color:
             self.canvas.setStrokeColor("black", 1)
 
-    def get_width_of_text(self, text: str, font_name: str, font_size: int, consider_overflow: bool = True):
-        self.interceptor.get_width_of_text(text, font_name, font_size, consider_overflow)
+    def get_width_of_text(self, text: str, style: TextStyle,  max_x: Optional[Number] = None):
+        self.interceptor.get_width_of_text(text, style, max_x)
 
         from reportlab.pdfbase.pdfmetrics import stringWidth
         max_x, _ = self.context.format.value
-        width = stringWidth(text, font_name, font_size)
+        width = stringWidth(text, style.font_name, style.font_size)
 
-        return min(width, max_x) if consider_overflow else width
+        return min(width, max_x)
 
     def get_height_of_text(self, text: str, style: TextStyle, max_x: Optional[Number] = None):
         self.interceptor.get_height_of_text(text, style, max_x)
-
-        import math
-        from reportlab.pdfbase import pdfmetrics
-
         max_x = max_x or self.context.format.value[0]
-        width = self.get_width_of_text(text, style.font_name, style.font_size, consider_overflow=False)
-        lines = math.ceil(width / max_x)
 
-        face = pdfmetrics.getFont(style.font_name).face
-        return ((face.ascent - face.descent) / 1000 * style.font_size) * lines
+        from reportlab.platypus import Paragraph
+        paragraph = Paragraph(text, style.to_paragraph_style())
+
+        _, h = paragraph.wrap(max_x, self.context.format.value[1])
+        return h
 
     def add_page(self):
         self.interceptor.add_page()

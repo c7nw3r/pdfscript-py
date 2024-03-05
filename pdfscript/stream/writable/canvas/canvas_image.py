@@ -1,7 +1,7 @@
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
-from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
+from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import ImageStyle, Align
 from pdfscript.__spi__.types import Number, PDFPosition, Space, PDFCoords
 

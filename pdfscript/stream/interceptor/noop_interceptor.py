@@ -1,11 +1,11 @@
 from typing import Optional
 
-from pdfscript.__spi__.pdf_opset import PDFOpset
+from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle, RectStyle
 from pdfscript.__spi__.types import Number, PDFCoords
 
 
-class DevNullInterceptor(PDFOpset):
+class NoOpInterceptor(PDFOpset):
 
     def add_text(self, text: str, box: PDFCoords, styling: TextStyle):
         pass

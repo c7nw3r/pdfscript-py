@@ -9,6 +9,10 @@ class Space:
     width: float
     height: float
 
+    def emit(self, listener):
+        listener.on_space(self)
+        return self
+
     def __iter__(self):
         yield self.width
         yield self.height
@@ -74,3 +78,15 @@ class Margin:
         yield self.right
         yield self.bottom
         yield self.left
+
+
+@dataclass
+class BoundingBox:
+    x1: Number
+    y1: Number
+    x2: Number
+    y2: Number
+
+    def emit(self, listener):
+        listener.on_instr(self)
+        return self

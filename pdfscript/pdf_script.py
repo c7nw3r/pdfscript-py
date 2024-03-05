@@ -2,13 +2,14 @@ from reportlab.pdfgen import canvas
 
 from pdfscript.__spi__.pdf_context import PDFContext, PageMargin, PageFormat
 from pdfscript.__spi__.pdf_font_registry import PDFFontRegistry
-from pdfscript.__spi__.pdf_interceptor import DevNullInterceptor
-from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter, PDFCanvas
+from pdfscript.__spi__.protocols import PDFOpset, PDFListener
 from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle
 from pdfscript.__spi__.types import PDFPosition
 from pdfscript.pdf_script_stream import PDFScriptStream
+from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
+from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle
 
@@ -26,8 +27,8 @@ class PDFScript:
     def a4(margin: PageMargin = PageMargin.default()):
         return PDFScript(PDFContext(PageFormat.A4, margin))
 
-    def text(self, content: str, style: TextStyle = TextStyle()):
-        self.center_writer.text(content, style)
+    def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.center_writer.text(content, style, listener)
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.center_writer.image(src, style)
@@ -56,7 +57,7 @@ class PDFScript:
     def with_canvas(self):
         return self.canvas_writer
 
-    def execute(self, path: str, interceptor: PDFOpset = DevNullInterceptor()):
+    def execute(self, path: str, interceptor: PDFOpset = NoOpInterceptor()):
         file_name = path[max(0, path.rfind("/")):]
         document = canvas.Canvas(file_name)
 

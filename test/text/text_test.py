@@ -3,16 +3,18 @@ from unittest import TestCase
 from pdfscript.__spi__.styles import TextStyle
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from pdfscript.stream.listener.bbox_listener import BBoxListener
 from test import get_local_dir
 
 
 class TextTest(TestCase):
 
     def test_paragraph(self):
+        bbox_listener = BBoxListener("text")
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.text("Test asdf" * 20)
+        script.text("Test asdf" * 30, listener=bbox_listener)
 
         script.execute("simple.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph.txt")

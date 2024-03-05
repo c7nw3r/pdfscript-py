@@ -1,7 +1,9 @@
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
+from pdfscript.__spi__.protocols import PDFListener
 from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, LineStyle, RectStyle
 from pdfscript.__spi__.types import Number
+from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.canvas.canvas_image import CanvasImage
 from pdfscript.stream.writable.canvas.canvas_line import CanvasLine
 from pdfscript.stream.writable.canvas.canvas_rect import CanvasRect
@@ -37,8 +39,8 @@ class PDFWriter(PDFCanvas):
     def __init__(self, context: PDFContext):
         super().__init__(context)
 
-    def text(self, content: str, style: TextStyle = TextStyle()):
-        self.objects.append(Text(content, style))
+    def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.objects.append(Text(content, style, listener))
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.objects.append(Image(src, style))

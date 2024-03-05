@@ -1,15 +1,18 @@
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
-from pdfscript.__spi__.pdf_opset import PDFOpset
 from pdfscript.__spi__.pdf_writable import Writable
-from pdfscript.__spi__.types import PDFPosition, Space
+from pdfscript.__spi__.protocols import PDFOpset, PDFListener
+from pdfscript.__spi__.styles import RectStyle
+from pdfscript.__spi__.types import PDFPosition, Space, BoundingBox
+from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 
 
 class Table(Writable):
 
-    def __init__(self, configurer: TableRowWriter):
+    def __init__(self, configurer: TableRowWriter, listener: PDFListener = NoOpListener()):
         self.configurer = configurer
+        self.listener = listener
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         writer = TableRowWriter(context)
@@ -18,11 +21,18 @@ class Table(Writable):
 
         def space(ops: PDFOpset, pos: PDFPosition):
             spaces = evaluations.get_spaces(ops, pos)
-            width = context.format.value[0]
+            width = pos.max_x - pos.x
             height = sum([e.height for e in spaces])
-            return Space(width, height)
+            return Space(width, height).emit(self.listener)
 
-        def instr(ops: PDFOpset, pos: PDFPosition, _get_space: SpaceSupplier):
-            return evaluations.execute(ops, pos)
+        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
+            width, height = get_space(ops, pos)
+
+            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+            if context.draw_bbox:
+                ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))
+
+            evaluations.execute(ops, pos)
+            return bbox.emit(self.listener)
 
         return PDFEvaluation(space, instr)

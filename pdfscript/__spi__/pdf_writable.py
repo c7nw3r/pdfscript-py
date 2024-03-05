@@ -3,7 +3,7 @@ from typing import Callable, List
 
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation
-from pdfscript.__spi__.pdf_opset import PDFOpset
+from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.types import PDFPosition, Space
 
 

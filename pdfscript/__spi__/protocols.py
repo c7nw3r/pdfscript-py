@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Optional, Protocol
 
 from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle, RectStyle
-from pdfscript.__spi__.types import Number, PDFCoords
+from pdfscript.__spi__.types import Number, PDFCoords, Space, BoundingBox
 
 
 class PDFOpset(Protocol):
@@ -24,7 +24,7 @@ class PDFOpset(Protocol):
         pass
 
     @abstractmethod
-    def get_width_of_text(self, text: str, font_name: str, font_size: int, consider_overflow: bool = True):
+    def get_width_of_text(self, text: str, style: TextStyle, max_x: Optional[Number] = None):
         pass
 
     @abstractmethod
@@ -33,4 +33,15 @@ class PDFOpset(Protocol):
 
     @abstractmethod
     def add_page(self):
+        pass
+
+
+class PDFListener(Protocol):
+
+    @abstractmethod
+    def on_space(self, space: Space):
+        pass
+
+    @abstractmethod
+    def on_instr(self, bbox: BoundingBox):
         pass

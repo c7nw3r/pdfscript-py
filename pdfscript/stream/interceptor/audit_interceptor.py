@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pdfscript.__spi__.pdf_opset import PDFOpset
+from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import TextStyle, LineStyle, ImageStyle, RectStyle
 from pdfscript.__spi__.types import Number, PDFCoords
 

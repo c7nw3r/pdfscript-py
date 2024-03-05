@@ -85,3 +85,4 @@ class PageMargin:
 class PDFContext:
     format: PageFormat
     margin: PageMargin
+    draw_bbox: bool = False
