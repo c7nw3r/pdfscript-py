@@ -66,8 +66,10 @@ class TableTest(TestCase):
         table = script.table()
         row1 = table.row()
         row1.col().text("abcd" * 10)
-        row1.col().text("abcd" * 10)
-        row1.col().text("abcd" * 10)
+        row1.col().text("abcd" * 20)
+        row1.col().text("abcd" * 5)
+
+        script.paragraph("abcd" * 10)
 
         script.render_as_file("table.pdf", interceptor)
-        interceptor.verify(f"{get_local_dir(__file__)}/test_text_and_table.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_and_table.txt")

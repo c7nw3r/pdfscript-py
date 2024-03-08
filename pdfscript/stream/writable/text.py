@@ -43,7 +43,6 @@ class Text(Writable):
                     pos.y -= height
                     pos.x = pos.min_x
 
-                    # ops.draw_line(0, pos.y, 1000, pos.y)
             else:
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 pos.x += width
