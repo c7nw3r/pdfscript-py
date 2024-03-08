@@ -9,7 +9,7 @@ from pdfscript.stream.listener.noop_listener import NoOpListener
 
 class Text(Writable):
     def __init__(self, text: str, style: TextStyle, listener: PDFListener = NoOpListener()):
-        self.text = text
+        self.text = str(text)  # convert to str in case the argument is not of type str
         self.style = style
         self.listener = listener
 
