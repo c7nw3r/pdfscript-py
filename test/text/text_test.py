@@ -16,7 +16,7 @@ class TextTest(TestCase):
         script = PDFScript.a4()
         script.text("Test asdf" * 30, listener=bbox_listener)
 
-        script.execute("simple.pdf", interceptor)
+        script.render_as_file("simple.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph.txt")
 
     def test_paragraph_with_custom_font(self):
@@ -25,7 +25,7 @@ class TextTest(TestCase):
         script = PDFScript.a4()
         script.text("Test asdf" * 20, TextStyle(font_name="Times-Bold", font_size=20))
 
-        script.execute("simple.pdf", interceptor)
+        script.render_as_file("simple.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_with_custom_font_justified.txt")
 
     def test_paragraph_with_header_and_footer(self):
@@ -40,5 +40,5 @@ class TextTest(TestCase):
 
         script.text("Test asdf" * 20, TextStyle(font_size=16))
 
-        script.execute("simple.pdf", interceptor)
+        script.render_as_file("simple.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_with_header_and_footer.txt")

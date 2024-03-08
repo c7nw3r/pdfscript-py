@@ -28,7 +28,7 @@ class TableTest(TestCase):
         row3.col().text("abcd" * 10)
         row3.col().text("abcd" * 10)
 
-        script.execute("table.pdf", interceptor)
+        script.render_as_file("table.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_table.txt")
 
     def test_table_without_border(self):
@@ -54,5 +54,5 @@ class TableTest(TestCase):
         row3.col(col_style).text("abcd" * 10)
         row3.col(col_style).text("abcd" * 10)
 
-        script.execute("table.pdf", interceptor)
+        script.render_as_file("table.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_table_without_border.txt")

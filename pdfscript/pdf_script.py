@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from reportlab.pdfgen import canvas
 
 from pdfscript.__spi__.pdf_context import PDFContext, PageMargin, PageFormat
@@ -57,10 +59,24 @@ class PDFScript:
     def with_canvas(self):
         return self.canvas_writer
 
-    def execute(self, path: str, interceptor: PDFOpset = NoOpInterceptor()):
+    def render_as_stream(self, interceptor: PDFOpset = NoOpInterceptor()):
+        buf = BytesIO()
+        document = canvas.Canvas(buf)
+
+        self._render(document, interceptor)
+
+        buf.seek(0)
+        return buf.read()
+
+    def render_as_file(self, path: str, interceptor: PDFOpset = NoOpInterceptor()):
         file_name = path[max(0, path.rfind("/")):]
         document = canvas.Canvas(file_name)
+        self._render(document, interceptor)
 
+        with open(path, "r") as file:
+            return file
+
+    def _render(self, document: canvas.Canvas, interceptor: PDFOpset = NoOpInterceptor()):
         stream = PDFScriptStream(document, self.context, interceptor)
 
         width, height = self.context.format.value

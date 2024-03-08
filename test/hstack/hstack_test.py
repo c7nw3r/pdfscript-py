@@ -19,5 +19,5 @@ class HStackTest(TestCase):
         h_stack2.text("Line 1")
         h_stack2.text("Line 2")
 
-        script.execute("hstack.pdf", interceptor)
+        script.render_as_file("hstack.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_hstack.txt")
