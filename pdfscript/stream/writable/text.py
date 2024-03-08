@@ -35,7 +35,7 @@ class Text(Writable):
             if not one_line:
                 if (pos.y - height) < pos.min_y:  # page overflow
                     ops.add_page()
-                    pos.y = pos.min_y
+                    pos.y = pos.max_y
                     pos.x = context.margin.left
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 else:
@@ -43,6 +43,7 @@ class Text(Writable):
                     pos.y -= height
                     pos.x = pos.min_x
 
+                    # ops.draw_line(0, pos.y, 1000, pos.y, LineStyle(stroke_color="red"))
             else:
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 pos.x += width

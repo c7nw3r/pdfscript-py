@@ -32,7 +32,7 @@ class TableCol(Writable):
             spaces = evaluations.get_spaces(ops, pos.with_max_x(pos.max_x - right - left))
 
             height = sum([e.height for e in spaces]) + top + bottom
-            w = pos.max_x - pos.x - self.style.gap  # do not consider margin
+            w = pos.max_x - pos.x - self.style.gap - self.style.gap  # do not consider margin
 
             return Space(w, height).emit(self.listener)
 
