@@ -9,6 +9,7 @@ from pdfscript.stream.writable.canvas.canvas_line import CanvasLine
 from pdfscript.stream.writable.canvas.canvas_rect import CanvasRect
 from pdfscript.stream.writable.canvas.canvas_text import CanvasText
 from pdfscript.stream.writable.image import Image
+from pdfscript.stream.writable.paragraph import Paragraph
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle, Text
 
@@ -41,6 +42,9 @@ class PDFWriter(PDFCanvas):
 
     def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.objects.append(Text(content, style, listener))
+
+    def paragraph(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.objects.append(Paragraph(content, style, listener))
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.objects.append(Image(src, style))

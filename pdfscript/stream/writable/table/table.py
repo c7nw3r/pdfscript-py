@@ -28,6 +28,10 @@ class Table(Writable):
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
 
+            if pos.x > pos.min_x:
+                pos.x = pos.min_x
+                pos.y -= 20  # FIXME: magic number
+
             bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
             if context.draw_bbox:
                 ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))

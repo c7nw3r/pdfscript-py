@@ -32,6 +32,9 @@ class PDFScript:
     def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.center_writer.text(content, style, listener)
 
+    def paragraph(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.center_writer.paragraph(content, style, listener)
+
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.center_writer.image(src, style)
 

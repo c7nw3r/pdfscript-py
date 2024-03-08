@@ -56,3 +56,18 @@ class TableTest(TestCase):
 
         script.render_as_file("table.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_table_without_border.txt")
+
+    def test_paragraph_and_table(self):
+        interceptor = AuditInterceptor()
+        script = PDFScript.a4()
+
+        script.paragraph("abcd" * 10)
+
+        table = script.table()
+        row1 = table.row()
+        row1.col().text("abcd" * 10)
+        row1.col().text("abcd" * 10)
+        row1.col().text("abcd" * 10)
+
+        script.render_as_file("table.pdf", interceptor)
+        interceptor.verify(f"{get_local_dir(__file__)}/test_text_and_table.txt")
