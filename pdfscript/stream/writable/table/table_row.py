@@ -36,7 +36,7 @@ class TableRow(Writable):
 
             if (pos.y - height) < pos.min_y:
                 ops.add_page()
-                pos.y = pos.min_y
+                pos.y = pos.max_y
 
             col_max_x = pos.x + (pos.max_x - pos.min_x) / len(evaluations)
             new_pos = pos.with_max_x(col_max_x).with_max_y(pos.y - height)
