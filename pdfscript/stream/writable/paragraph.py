@@ -16,8 +16,10 @@ class Paragraph(Text):
         super_space, super_instr = super().evaluate(context)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
+            _, height = get_space(ops, pos)
+
             super_instr(ops, pos, get_space)
             pos.x = pos.min_x
-            pos.y -= self.style.space_after
+            pos.y -= height
 
         return PDFEvaluation(super_space, instr)
