@@ -29,10 +29,10 @@ class TableCol(Writable):
 
         def space(ops: PDFOpset, pos: PDFPosition):
             top, right, bottom, left = self.style.margin
-            spaces = evaluations.get_spaces(ops, pos.with_max_x(pos.max_x - right - left))
+            spaces = evaluations.get_spaces(ops, pos.with_max_x(pos.max_x - right - left - self.style.gap * 2))
 
             height = sum([e.height for e in spaces]) + top + bottom
-            w = pos.max_x - pos.x - self.style.gap - self.style.gap  # do not consider margin
+            w = pos.max_x - pos.x  # do not consider margin and gap
 
             return Space(w, height).emit(self.listener)
 
