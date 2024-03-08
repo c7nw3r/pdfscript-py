@@ -38,6 +38,7 @@ class Text(Writable):
                     pos.y = pos.max_y
                     pos.x = context.margin.left
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
+                    pos.y -= height
                 else:
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                     pos.y -= height

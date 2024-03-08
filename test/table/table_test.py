@@ -36,7 +36,7 @@ class TableTest(TestCase):
         script = PDFScript.a4()
 
         row_style = TableRowStyle()
-        col_style = TableColStyle(border=LineStyle("white"), gap=10)
+        col_style = TableColStyle(border=LineStyle("white"), gap=5)
 
         table = script.table()
         row1 = table.row(row_style)
@@ -65,9 +65,9 @@ class TableTest(TestCase):
 
         table = script.table()
         row1 = table.row()
-        row1.col().text("abcd" * 10)
-        row1.col().text("abcd" * 20)
-        row1.col().text("abcd" * 5)
+        row1.col(TableColStyle(gap=10)).text("The Foundation has grown rapidly throughout its existence. By 2022, it employed around 700 staff")
+        row1.col(TableColStyle(gap=10)).text("and contractors, with annual revenues of $155 million, annual expenses of $146 million, net assets")
+        row1.col(TableColStyle(gap=10)).text("of $240 million and a growing endowment, which surpassed $100 million in June 2021.")
 
         script.paragraph("abcd" * 10)
 
