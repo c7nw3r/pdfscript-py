@@ -5,7 +5,7 @@ from reportlab.pdfgen.canvas import Canvas
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import ImageStyle, LineStyle, RectStyle
-from pdfscript.__spi__.types import Number, PDFCoords
+from pdfscript.__spi__.types import Number, PDFCoords, PDFPosition
 from pdfscript.stream.writable.text import TextStyle
 
 
@@ -69,6 +69,29 @@ class PDFScriptStream(PDFOpset):
 
         _, h = paragraph.wrap(max_x, self.context.format.value[1])
         return h
+
+    # TODO: make more performant
+    def split_text_by_height(self, text: str, style: TextStyle, pos: PDFPosition):
+        necessary_height = self.get_height_of_text(text, style, pos.max_x - pos.x)
+        available_height = pos.y - pos.min_y
+
+        chunk_height = necessary_height
+        all_tokens = text.split(" ")
+        tokens = text.split(" ")
+
+        split_pos = None
+        while chunk_height > available_height:
+            split_pos = len(tokens) - 10
+            tokens = tokens[:split_pos]
+            chunk = " ".join(tokens)
+
+            chunk_height = self.get_height_of_text(chunk, style, pos.max_x - pos.x)
+
+        if split_pos is None:
+            return [text, ""]
+        elif split_pos <= 0:
+            return ["", text]
+        return [" ".join(all_tokens[:split_pos]), " ".join(all_tokens[split_pos:])]
 
     def add_page(self):
         self.interceptor.add_page()

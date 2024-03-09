@@ -2,7 +2,7 @@ from typing import Optional
 
 from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle, RectStyle
-from pdfscript.__spi__.types import Number, PDFCoords
+from pdfscript.__spi__.types import Number, PDFCoords, PDFPosition
 
 
 class NoOpInterceptor(PDFOpset):
@@ -20,6 +20,9 @@ class NoOpInterceptor(PDFOpset):
         pass
 
     def get_width_of_text(self, text: str, font_name: str, font_size: int, consider_overflow: bool = True):
+        pass
+
+    def split_text_by_height(self, text: str, style: TextStyle, pos: PDFPosition):
         pass
 
     def get_height_of_text(self, text: str, style: TextStyle, max_x: Optional[Number] = None):

@@ -2,7 +2,7 @@ from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import SpaceSupplier
 from pdfscript.__spi__.pdf_writable import PDFEvaluation
 from pdfscript.__spi__.protocols import PDFListener, PDFOpset
-from pdfscript.__spi__.styles import TextStyle, LineStyle
+from pdfscript.__spi__.styles import TextStyle
 from pdfscript.__spi__.types import PDFPosition
 from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.text import Text
@@ -23,7 +23,5 @@ class Paragraph(Text):
             pos.x = pos.min_x
             if one_line:
                 pos.y -= height
-
-            ops.draw_line(0, pos.y, 1000, pos.y, LineStyle("red"))
 
         return PDFEvaluation(super_space, instr)

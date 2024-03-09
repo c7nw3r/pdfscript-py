@@ -34,11 +34,21 @@ class Text(Writable):
 
             if not one_line:
                 if (pos.y - height) < pos.min_y:  # page overflow
-                    ops.add_page()
-                    pos.y = pos.max_y
-                    pos.x = context.margin.left
-                    ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
-                    pos.y -= height
+                    _text = self.text
+                    _height = height
+
+                    while len(_text) > 0:
+                        split_a, split_b = ops.split_text_by_height(_text, self.style, pos)
+
+                        if len(split_a) > 0:
+                            ops.add_text(split_a, pos.with_x_offset(x_offset), self.style)
+                        if len(split_b) > 0:
+                            ops.add_page()
+
+                        _text = split_b
+                        pos.y = pos.max_y - (0 if len(split_b) > 0 else height)
+                        pos.x = context.margin.left
+
                 else:
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                     pos.y -= height

@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Optional, Protocol
 
 from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle, RectStyle
-from pdfscript.__spi__.types import Number, PDFCoords, Space, BoundingBox
+from pdfscript.__spi__.types import Number, PDFCoords, Space, BoundingBox, PDFPosition
 
 
 class PDFOpset(Protocol):
@@ -29,6 +29,10 @@ class PDFOpset(Protocol):
 
     @abstractmethod
     def get_height_of_text(self, text: str, style: TextStyle, max_x: Optional[Number] = None):
+        pass
+
+    @abstractmethod
+    def split_text_by_height(self, text: str, style: TextStyle, pos: PDFPosition):
         pass
 
     @abstractmethod

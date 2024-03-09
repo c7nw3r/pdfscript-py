@@ -2,7 +2,7 @@ from typing import Optional
 
 from pdfscript.__spi__.protocols import PDFOpset
 from pdfscript.__spi__.styles import TextStyle, LineStyle, ImageStyle, RectStyle
-from pdfscript.__spi__.types import Number, PDFCoords
+from pdfscript.__spi__.types import Number, PDFCoords, PDFPosition
 
 
 class AuditInterceptor(PDFOpset):
@@ -27,6 +27,9 @@ class AuditInterceptor(PDFOpset):
         pass
 
     def get_height_of_text(self, text: str, style: TextStyle, max_x: Optional[Number] = None):
+        pass
+
+    def split_text_by_height(self, text: str, style: TextStyle, pos: PDFPosition):
         pass
 
     def add_page(self):
