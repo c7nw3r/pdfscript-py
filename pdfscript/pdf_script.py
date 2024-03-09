@@ -7,8 +7,8 @@ from pdfscript.__spi__.pdf_font_registry import PDFFontRegistry
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter, PDFCanvas
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle
-from pdfscript.__spi__.types import PDFPosition
+from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle
+from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.pdf_script_stream import PDFScriptStream
 from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
 from pdfscript.stream.listener.noop_listener import NoOpListener
@@ -32,6 +32,9 @@ class PDFScript:
     def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.center_writer.text(content, style, listener)
 
+    def bold(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.center_writer.bold(content, style, listener)
+
     def paragraph(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.center_writer.paragraph(content, style, listener)
 
@@ -52,6 +55,9 @@ class PDFScript:
         configurer = TableRowWriter(self.context)
         self.center_writer.table(configurer)
         return configurer
+
+    def rect(self, x1: Number, y1: Number, x2: Number, y2: Number, style: RectStyle = RectStyle()):
+        self.canvas_writer.draw_rect(x1, y1, x2, y2, style)
 
     def with_header(self):
         return self.header_writer

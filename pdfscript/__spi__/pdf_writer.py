@@ -1,9 +1,10 @@
 from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.protocols import PDFListener
-from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, LineStyle, RectStyle
+from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, LineStyle, RectStyle, ParagraphStyle
 from pdfscript.__spi__.types import Number
 from pdfscript.stream.listener.noop_listener import NoOpListener
+from pdfscript.stream.writable.bold import Bold
 from pdfscript.stream.writable.canvas.canvas_image import CanvasImage
 from pdfscript.stream.writable.canvas.canvas_line import CanvasLine
 from pdfscript.stream.writable.canvas.canvas_rect import CanvasRect
@@ -43,7 +44,10 @@ class PDFWriter(PDFCanvas):
     def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.objects.append(Text(content, style, listener))
 
-    def paragraph(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+    def bold(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.objects.append(Bold(content, style, listener))
+
+    def paragraph(self, content: str, style: ParagraphStyle = ParagraphStyle(), listener: PDFListener = NoOpListener()):
         self.objects.append(Paragraph(content, style, listener))
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):

@@ -45,17 +45,22 @@ class PDFScriptStream(PDFOpset):
 
         if style.stroke_color:
             self.canvas.setStrokeColor(style.stroke_color, style.stroke_opacity)
+        if style.fill_color:
+            self.canvas.setFillColor(style.fill_color, style.fill_opacity)
 
-        self.canvas.rect(x1, y1, x2 - x1, y2 - y1)
+        self.canvas.rect(x1, y1, x2 - x1, y2 - y1, fill=style.fill_color is not None)
 
         if style.stroke_color:
             self.canvas.setStrokeColor("black", 1)
+        if style.stroke_color:
+            self.canvas.setStrokeColor("white", 0)
 
     def get_width_of_text(self, text: str, style: TextStyle,  max_x: Optional[Number] = None):
         self.interceptor.get_width_of_text(text, style, max_x)
 
         from reportlab.pdfbase.pdfmetrics import stringWidth
-        max_x, _ = self.context.format.value
+        if max_x is None:
+            max_x, _ = self.context.format.value
         width = stringWidth(text, style.font_name, style.font_size)
 
         return min(width, max_x)

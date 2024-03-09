@@ -14,8 +14,8 @@ class Image(Writable):
         self.listener = listener
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
-        def space(_ops: PDFOpset, _pos: PDFPosition):
-            return Space(self.style.width, self.style.height).emit(self.listener)
+        def space(ops: PDFOpset, _pos: PDFPosition):
+            return Space(self.style.width, self.style.height).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)

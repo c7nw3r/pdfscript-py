@@ -27,7 +27,7 @@ class HStack(Writable):
 
             width = sum([e.width for e in spaces]) + self.style.gap
             height = max([e.height for e in spaces]) + self.style.margin.bottom
-            return Space(width, height).emit(self.listener)
+            return Space(width, height).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             original_y = pos.y
@@ -54,6 +54,6 @@ class HStack(Writable):
                 evaluations.execute(ops, pos, postprocess)
 
             pos.y = original_y
-            return bbox.emit(self.listener)
+            return bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)

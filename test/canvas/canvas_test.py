@@ -12,6 +12,7 @@ class CanvasTest(TestCase):
 
         canvas = script.with_canvas()
         canvas.draw_line(10, 10, 100, 100)
+        canvas.draw_rect(10, 10, 100, 100)
 
         script.render_as_file("canvas.pdf", interceptor)
         # interceptor.verify(f"{get_local_dir(__file__)}/test_hstack.txt")

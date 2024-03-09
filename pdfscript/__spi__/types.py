@@ -9,8 +9,8 @@ class Space:
     width: float
     height: float
 
-    def emit(self, listener):
-        listener.on_space(self)
+    def emit(self, listener, ops):
+        listener.on_space(self, ops)
         return self
 
     def __iter__(self):
@@ -88,8 +88,8 @@ class BoundingBox:
     x2: Number
     y2: Number
 
-    def emit(self, listener):
-        listener.on_instr(self)
+    def emit(self, listener, ops):
+        listener.on_instr(self, ops)
         return self
 
 

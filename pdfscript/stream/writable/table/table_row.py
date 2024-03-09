@@ -28,7 +28,7 @@ class TableRow(Writable):
                 _pos.x += ((pos.max_x - pos.min_x) / len(evaluations))
 
             spaces = evaluations.get_spaces(ops, new_pos, True, False, postprocess)
-            return Space(pos.max_x - pos.x, max([e.height for e in spaces])).emit(self.listener)
+            return Space(pos.max_x - pos.x, max([e.height for e in spaces])).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
@@ -50,6 +50,6 @@ class TableRow(Writable):
             pos.x = pos.min_x
             pos.y -= height
 
-            return bbox.emit(self.listener)
+            return bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)

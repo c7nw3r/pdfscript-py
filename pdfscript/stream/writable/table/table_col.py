@@ -34,7 +34,7 @@ class TableCol(Writable):
             height = sum([e.height for e in spaces]) + top + bottom
             w = pos.max_x - pos.x  # do not consider margin and gap
 
-            return Space(w, height).emit(self.listener)
+            return Space(w, height).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
@@ -55,6 +55,6 @@ class TableCol(Writable):
             pos.move_to(x, y)
 
             pos.x += width + get_gap(pos)[1]
-            return bbox.emit(self.listener)
+            return bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)

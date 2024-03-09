@@ -21,7 +21,7 @@ class Text(Writable):
             w = ops.get_width_of_text(self.text, self.style, pos.max_x - pos.x) + x_offset
             h = ops.get_height_of_text(self.text, self.style, pos.max_x - pos.x) + y_offset
 
-            return Space(w, h).emit(self.listener)
+            return Space(w, h).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
@@ -40,7 +40,7 @@ class Text(Writable):
                         if split_a is not None:
                             ops.add_text(split_a.text, pos.with_x_offset(x_offset), self.style)
                             bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - split_a.height)
-                            bbox.emit(self.listener)
+                            bbox.emit(self.listener, ops)
 
                         if split_b is not None:
                             ops.add_page()
@@ -54,13 +54,13 @@ class Text(Writable):
                     pos.y -= height
                     pos.x = pos.min_x
 
-                    bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
-                    bbox.emit(self.listener)
+                    bbox = BoundingBox(pos.x, pos.y + height, pos.x + width, pos.y)
+                    bbox.emit(self.listener, ops)
             else:
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 pos.x += width
 
                 bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
-                bbox.emit(self.listener)
+                bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)

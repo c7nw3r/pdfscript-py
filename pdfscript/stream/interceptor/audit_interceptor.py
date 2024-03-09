@@ -12,7 +12,8 @@ class AuditInterceptor(PDFOpset):
         self.audit_log = []
 
     def add_text(self, text: str, box: PDFCoords, styling: TextStyle):
-        self.audit_log.append(f'add_text("{text}", {box.x}, {box.y}, {styling})')
+        NEW_LINE = "\n"
+        self.audit_log.append(f'add_text("{text.replace(NEW_LINE, " ")}", {box.x}, {box.y}, {styling})')
 
     def add_image(self, src: str, box: PDFCoords, styling: ImageStyle):
         self.audit_log.append(f'add_image("{src[src.rfind("/") + 1:]}", {box.x}, {box.y}, {styling})')

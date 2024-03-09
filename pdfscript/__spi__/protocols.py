@@ -43,9 +43,9 @@ class PDFOpset(Protocol):
 class PDFListener(Protocol):
 
     @abstractmethod
-    def on_space(self, space: Space):
+    def on_space(self, space: Space, ops: PDFOpset):
         pass
 
     @abstractmethod
-    def on_instr(self, bbox: BoundingBox):
+    def on_instr(self, bbox: BoundingBox, ops: PDFOpset):
         pass

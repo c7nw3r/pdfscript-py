@@ -23,7 +23,7 @@ class Table(Writable):
             spaces = evaluations.get_spaces(ops, pos)
             width = pos.max_x - pos.x
             height = sum([e.height for e in spaces])
-            return Space(width, height).emit(self.listener)
+            return Space(width, height).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
@@ -37,6 +37,6 @@ class Table(Writable):
                 ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))
 
             evaluations.execute(ops, pos)
-            return bbox.emit(self.listener)
+            return bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)

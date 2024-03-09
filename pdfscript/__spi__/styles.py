@@ -35,6 +35,11 @@ class TextStyle:
 
 
 @dataclass
+class ParagraphStyle(TextStyle):
+    layout: Literal["block", "col2", "col3"] = "block"
+
+
+@dataclass
 class ImageStyle:
     width: int = 100
     height: int = 100

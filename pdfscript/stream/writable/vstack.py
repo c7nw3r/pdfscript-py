@@ -27,7 +27,7 @@ class VStack(Writable):
             width = max([e.width for e in spaces])
             height = sum([e.height for e in spaces]) + margin + self.style.gap
 
-            return Space(width, height).emit(self.listener)
+            return Space(width, height).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             x = pos.x
@@ -47,6 +47,6 @@ class VStack(Writable):
 
                 index += 1
 
-            return bbox.emit(self.listener)
+            return bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)
