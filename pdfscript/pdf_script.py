@@ -91,7 +91,7 @@ class PDFScript:
         canvas_eval = self.canvas_writer.write()
 
         hh = self._calc_height(header_eval, stream)
-        ch = self._calc_height(center_eval, stream)
+        # ch = self._calc_height(center_eval, stream)
         fh = self._calc_height(footer_eval, stream)
 
         hy = min(height - t, height - (hh + self.context.margin.header))

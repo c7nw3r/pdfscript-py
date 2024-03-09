@@ -80,6 +80,7 @@ class Margin:
         yield self.left
 
 
+# TODO: add page info
 @dataclass
 class BoundingBox:
     x1: Number
@@ -90,3 +91,12 @@ class BoundingBox:
     def emit(self, listener):
         listener.on_instr(self)
         return self
+
+
+@dataclass
+class TextChunk:
+    text: str
+    height: Number
+
+    def __len__(self):
+        return len(self.text)

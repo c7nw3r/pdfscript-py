@@ -2,7 +2,7 @@ from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import SpaceSupplier
 from pdfscript.__spi__.pdf_writable import Writable, PDFEvaluation
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import TextStyle, RectStyle
+from pdfscript.__spi__.styles import TextStyle
 from pdfscript.__spi__.types import Space, PDFPosition, BoundingBox
 from pdfscript.stream.listener.noop_listener import NoOpListener
 
@@ -29,9 +29,6 @@ class Text(Writable):
 
             pos.move_y_offset(y_offset)
 
-            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
-            bbox.emit(self.listener)
-
             if not one_line:
                 if (pos.y - height) < pos.min_y:  # page overflow
                     _text = self.text
@@ -40,13 +37,16 @@ class Text(Writable):
                     while len(_text) > 0:
                         split_a, split_b = ops.split_text_by_height(_text, self.style, pos)
 
-                        if len(split_a) > 0:
-                            ops.add_text(split_a, pos.with_x_offset(x_offset), self.style)
-                        if len(split_b) > 0:
+                        if split_a is not None:
+                            ops.add_text(split_a.text, pos.with_x_offset(x_offset), self.style)
+                            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - split_a.height)
+                            bbox.emit(self.listener)
+
+                        if split_b is not None:
                             ops.add_page()
 
-                        _text = split_b
-                        pos.y = pos.max_y - (0 if len(split_b) > 0 else height)
+                        _text = split_b.text if split_b is not None else ""
+                        pos.y = pos.max_y - (0 if len(split_b or []) > 0 else height)
                         pos.x = context.margin.left
 
                 else:
@@ -54,12 +54,13 @@ class Text(Writable):
                     pos.y -= height
                     pos.x = pos.min_x
 
-                    # ops.draw_line(0, pos.y, 1000, pos.y, LineStyle(stroke_color="red"))
+                    bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+                    bbox.emit(self.listener)
             else:
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 pos.x += width
 
-            if context.draw_bbox:
-                ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))
+                bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+                bbox.emit(self.listener)
 
         return PDFEvaluation(space, instr)

@@ -73,3 +73,21 @@ class TableTest(TestCase):
 
         script.render_as_file("table.pdf", interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_and_table.txt")
+
+    # def test_table_overflow(self):
+    #     interceptor = AuditInterceptor()
+    #     script = PDFScript.a4()
+    #
+    #     script.paragraph("abcd" * 10)
+    #
+    #     table = script.table()
+    #     for i in range(10):
+    #         row = table.row()
+    #         row.col(TableColStyle(gap=10)).text("ABC " * 150)
+    #         row.col(TableColStyle(gap=10)).text("ABC " * 150)
+    #         row.col(TableColStyle(gap=10)).text("ABC " * 150)
+    #
+    #     script.paragraph("abcd" * 10)
+    #
+    #     script.render_as_file("table.pdf", interceptor)
+    #     interceptor.verify(f"{get_local_dir(__file__)}/test_table_overflow.txt")
