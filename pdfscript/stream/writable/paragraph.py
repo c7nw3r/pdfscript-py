@@ -37,6 +37,7 @@ class Paragraph(Text):
             if self.style.layout in ["col2", "col3"]:
                 chunks = chunk_text(self.text, int(self.style.layout[-1]))
 
+                col_y = []
                 new_pos = pos.copy()
                 width = pos.max_x - pos.min_x
 
@@ -52,7 +53,10 @@ class Paragraph(Text):
                     super_instr(ops, new_pos, get_space)
                     new_pos.x = new_pos.max_x + gap_b
                     new_pos.min_x = new_pos.x - gap_a
+                    col_y.append(new_pos.y)
                     new_pos.y = y
+
+                pos.y = min(col_y)
             else:
                 _, height = get_space(ops, pos)
                 one_line = height <= ops.get_height_of_text(".", self.style) + self.style.space_after
