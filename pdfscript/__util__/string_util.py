@@ -28,6 +28,8 @@ def split_text_by_height(ops: PDFOpset, style: TextStyle, pos: PDFPosition, text
 
     if available_height > necessary_height:
         return [TextChunk(text, necessary_height)]
+    if available_height <= 0:
+        return [TextChunk(text, necessary_height)]
 
     chunk_height = necessary_height
     all_tokens = text.split(" ")
@@ -35,6 +37,7 @@ def split_text_by_height(ops: PDFOpset, style: TextStyle, pos: PDFPosition, text
 
     split_pos = None
     while chunk_height > available_height:
+        # TODO: make more performant
         split_pos = len(tokens) - 1
         tokens = tokens[:split_pos]
         chunk = " ".join(tokens)

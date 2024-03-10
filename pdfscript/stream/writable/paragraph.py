@@ -41,7 +41,7 @@ class Paragraph(Text):
                 for is_first, is_last, split in traverse(splits):
                     chunks = chunk_text(split.text, int(self.style.layout[-1]))
 
-                    col_y = []
+                    y_offsets = []
                     new_pos = pos.copy()
                     width = pos.max_x - pos.min_x
                     col_width = width / len(chunks)
@@ -58,10 +58,10 @@ class Paragraph(Text):
                         super_instr(ops, new_pos, get_space)
                         new_pos.x = new_pos.max_x + gap_b
                         new_pos.min_x = new_pos.x - gap_a
-                        col_y.append(new_pos.y)
+                        y_offsets.append(pos.y - new_pos.y)
                         new_pos.y = y
 
-                    pos.y = min(col_y)
+                    pos.y -= max(y_offsets) if max(y_offsets) > 0 else get_space(ops, pos).height
 
                     if not is_last:
                         ops.add_page()
