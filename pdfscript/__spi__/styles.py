@@ -37,6 +37,7 @@ class TextStyle:
 @dataclass
 class ParagraphStyle(TextStyle):
     layout: Literal["block", "col2", "col3"] = "block"
+    gap: Number = 0
 
 
 @dataclass

@@ -7,7 +7,7 @@ from pdfscript.__spi__.pdf_font_registry import PDFFontRegistry
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter, PDFCanvas
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle
+from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle, ParagraphStyle
 from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.pdf_script_stream import PDFScriptStream
 from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
@@ -35,7 +35,7 @@ class PDFScript:
     def bold(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.center_writer.bold(content, style, listener)
 
-    def paragraph(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+    def paragraph(self, content: str, style: ParagraphStyle = ParagraphStyle(), listener: PDFListener = NoOpListener()):
         self.center_writer.paragraph(content, style, listener)
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):
@@ -104,9 +104,7 @@ class PDFScript:
         fy = min(b, fh + self.context.margin.footer)
 
         # stream.draw_line(0, hy, width, hy, LineStyle(stroke_color="red"))
-
-        available_center_height = height - hy - fy
-
+        # available_center_height = height - hy - fy
         # stream.putPDFValue("totalPages", Math.max(Math.ceil(ch / availableCenterHeight), 1))
 
         def render_header():

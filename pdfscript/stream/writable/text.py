@@ -51,16 +51,18 @@ class Text(Writable):
 
                 else:
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
+
+                    bbox = BoundingBox(pos.x, pos.y, pos.x + (pos.max_x - pos.x), pos.y - height)
+                    bbox.emit(self.listener, ops)
+
                     pos.y -= height
                     pos.x = pos.min_x
-
-                    bbox = BoundingBox(pos.x, pos.y + height, pos.x + width, pos.y)
-                    bbox.emit(self.listener, ops)
             else:
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
-                pos.x += width
-
                 bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
                 bbox.emit(self.listener, ops)
+
+                pos.x += width
+
 
         return PDFEvaluation(space, instr)

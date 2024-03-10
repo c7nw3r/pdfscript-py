@@ -48,6 +48,9 @@ class PDFPosition(PDFCoords):
         self.y = y
         return self
 
+    def with_x(self, amount: Number = 0):
+        return PDFPosition(amount, self.y, self.min_x, self.min_y, self.max_x, self.max_y)
+
     def with_x_offset(self, amount: Number = 0):
         return PDFPosition(self.x + amount, self.y, self.min_x, self.min_y, self.max_x, self.max_y)
 
