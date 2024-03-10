@@ -29,7 +29,7 @@ class Paragraph(Text):
         def space(ops: PDFOpset, pos: PDFPosition):
             if self.style.layout in ["col2", "col3"]:
                 w = pos.max_x - pos.x
-                h = ops.get_height_of_text(self.text, self.style, w)
+                h = ops.get_height_of_text(self.text or ".", self.style, w)
                 return Space(w, h)
 
             return super_space(ops, pos)

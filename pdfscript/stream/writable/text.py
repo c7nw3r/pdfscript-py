@@ -25,7 +25,7 @@ class Text(Writable):
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
-            one_line = height <= ops.get_height_of_text(".", self.style) + self.style.space_after
+            one_line = height <= ops.get_height_of_text(".", self.style)
 
             pos.move_y_offset(y_offset)
 
