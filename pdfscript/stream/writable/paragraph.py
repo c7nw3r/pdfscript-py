@@ -4,6 +4,7 @@ from pdfscript.__spi__.pdf_writable import PDFEvaluation
 from pdfscript.__spi__.protocols import PDFListener, PDFOpset
 from pdfscript.__spi__.styles import ParagraphStyle
 from pdfscript.__spi__.types import PDFPosition, Space
+from pdfscript.__util__.array_util import traverse
 from pdfscript.__util__.string_util import chunk_text
 from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.text import Text
@@ -35,28 +36,39 @@ class Paragraph(Text):
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             if self.style.layout in ["col2", "col3"]:
-                chunks = chunk_text(self.text, int(self.style.layout[-1]))
+                # FIXME: magic number
+                splits = ops.split_text_by_height(self.text, self.style, pos.with_y_offset(-50))
+                splits = [e.text for e in splits if e is not None]
 
-                col_y = []
-                new_pos = pos.copy()
-                width = pos.max_x - pos.min_x
+                for is_first, is_last, split in traverse(splits):
+                    chunks = chunk_text(split, int(self.style.layout[-1]))
 
-                for i in range(len(chunks)):
-                    self.text = chunks[i]
-                    new_pos.max_x = (pos.x + width / len(chunks) * (i + 1))#  - (self.style.gap if i < len(chunks) - 1 else 0)
+                    col_y = []
+                    new_pos = pos.copy()
+                    width = pos.max_x - pos.min_x
+                    col_width = width / len(chunks)
 
-                    gap_a, gap_b = get_gap(new_pos)
-                    new_pos.x += gap_a
-                    new_pos.max_x -= gap_b
+                    for i in range(len(chunks)):
+                        self.text = chunks[i]
+                        new_pos.max_x = new_pos.x + col_width
 
-                    y = pos.y
-                    super_instr(ops, new_pos, get_space)
-                    new_pos.x = new_pos.max_x + gap_b
-                    new_pos.min_x = new_pos.x - gap_a
-                    col_y.append(new_pos.y)
-                    new_pos.y = y
+                        gap_a, gap_b = get_gap(new_pos)
+                        new_pos.x += gap_a
+                        new_pos.max_x -= gap_b
 
-                pos.y = min(col_y)
+                        y = pos.y
+                        super_instr(ops, new_pos, get_space)
+                        new_pos.x = new_pos.max_x + gap_b
+                        new_pos.min_x = new_pos.x - gap_a
+                        col_y.append(new_pos.y)
+                        new_pos.y = y
+
+                    pos.y = min(col_y)
+
+                    if not is_last:
+                        ops.add_page()
+                        pos.x = pos.min_x
+                        pos.y = pos.max_y
             else:
                 _, height = get_space(ops, pos)
                 one_line = height <= ops.get_height_of_text(".", self.style) + self.style.space_after
