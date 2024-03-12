@@ -9,3 +9,6 @@ class NoOpListener(PDFListener):
 
     def on_instr(self, bbox: BoundingBox, ops: PDFOpset):
         pass
+
+
+DEV_NULL = NoOpListener()

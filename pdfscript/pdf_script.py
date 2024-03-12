@@ -7,11 +7,11 @@ from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter, PDFCanvas
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
 from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle, ParagraphStyle, \
-    DEFAULT_TITLE_STYLE
+    DEFAULT_TITLE_STYLE, DEFAULT_PARAGRAPH_STYLE
 from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.pdf_script_stream import PDFScriptStream
 from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
-from pdfscript.stream.listener.noop_listener import NoOpListener
+from pdfscript.stream.listener.noop_listener import DEV_NULL
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle
 
@@ -28,23 +28,23 @@ class PDFScript:
     def a4(margin: PageMargin = PageMargin.default()):
         return PDFScript(PDFContext(PageFormat.A4, margin))
 
-    def text(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
-        self.center_writer.text(content, style, listener)
+    def text(self, text: str, style: TextStyle = TextStyle(), listener: PDFListener = DEV_NULL):
+        self.center_writer.text(text, style, listener)
 
-    def bold(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
-        self.center_writer.bold(content, style, listener)
+    def bold(self, text: str, style: TextStyle = TextStyle(), listener: PDFListener = DEV_NULL):
+        self.center_writer.bold(text, style, listener)
 
-    def paragraph(self, content: str, style: ParagraphStyle = ParagraphStyle(), listener: PDFListener = NoOpListener()):
-        self.center_writer.paragraph(content, style, listener)
+    def paragraph(self, text: str, style: ParagraphStyle = DEFAULT_PARAGRAPH_STYLE, listener: PDFListener = DEV_NULL):
+        self.center_writer.paragraph(text, style, listener)
 
-    def title1(self, content: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = NoOpListener):
-        self.center_writer.title1(content, style, listener)
+    def title1(self, text: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = DEV_NULL):
+        self.center_writer.title1(text, style, listener)
 
-    def title2(self, content: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = NoOpListener):
-        self.center_writer.title2(content, style, listener)
+    def title2(self, text: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = DEV_NULL):
+        self.center_writer.title2(text, style, listener)
 
-    def title3(self, content: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = NoOpListener):
-        self.center_writer.title3(content, style, listener)
+    def title3(self, text: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = DEV_NULL):
+        self.center_writer.title3(text, style, listener)
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.center_writer.image(src, style)

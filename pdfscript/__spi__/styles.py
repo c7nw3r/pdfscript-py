@@ -91,3 +91,4 @@ class RectStyle:
 
 
 DEFAULT_TITLE_STYLE = TextStyle(margin=Margin(10, 0, 10, 0))
+DEFAULT_PARAGRAPH_STYLE = ParagraphStyle(margin=Margin(0, 0, 10, 0))
