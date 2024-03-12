@@ -6,8 +6,7 @@ from pdfscript.__spi__.pdf_context import PDFContext, PageMargin, PageFormat
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter, PDFCanvas
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle, ParagraphStyle, \
-    DEFAULT_TITLE_STYLE, DEFAULT_PARAGRAPH_STYLE
+from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle, ParagraphStyle, TitleStyle
 from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.pdf_script_stream import PDFScriptStream
 from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
@@ -34,16 +33,16 @@ class PDFScript:
     def bold(self, text: str, style: TextStyle = TextStyle(), listener: PDFListener = DEV_NULL):
         self.center_writer.bold(text, style, listener)
 
-    def paragraph(self, text: str, style: ParagraphStyle = DEFAULT_PARAGRAPH_STYLE, listener: PDFListener = DEV_NULL):
+    def paragraph(self, text: str, style: ParagraphStyle = ParagraphStyle(), listener: PDFListener = DEV_NULL):
         self.center_writer.paragraph(text, style, listener)
 
-    def title1(self, text: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = DEV_NULL):
+    def title1(self, text: str, style: TextStyle = TitleStyle(), listener: PDFListener = DEV_NULL):
         self.center_writer.title1(text, style, listener)
 
-    def title2(self, text: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = DEV_NULL):
+    def title2(self, text: str, style: TextStyle = TitleStyle(), listener: PDFListener = DEV_NULL):
         self.center_writer.title2(text, style, listener)
 
-    def title3(self, text: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = DEV_NULL):
+    def title3(self, text: str, style: TextStyle = TitleStyle(), listener: PDFListener = DEV_NULL):
         self.center_writer.title3(text, style, listener)
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):

@@ -38,6 +38,12 @@ class TextStyle:
 class ParagraphStyle(TextStyle):
     layout: Literal["block", "col2", "col3"] = "block"
     gap: Number = 0
+    margin: Margin = Margin(0, 0, 10, 0)
+
+
+@dataclass
+class TitleStyle(TextStyle):
+    margin: Margin = Margin(10, 0, 10, 0)
 
 
 @dataclass
@@ -88,7 +94,3 @@ class RectStyle:
     stroke_opacity: float = 1
     fill_color: Optional[str] = None
     fill_opacity: float = 1
-
-
-DEFAULT_TITLE_STYLE = TextStyle(margin=Margin(10, 0, 10, 0))
-DEFAULT_PARAGRAPH_STYLE = ParagraphStyle(margin=Margin(0, 0, 10, 0))
