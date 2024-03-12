@@ -46,7 +46,7 @@ class Text(Writable):
                             ops.add_page()
 
                         _text = split_b.text if split_b is not None else ""
-                        pos.y = pos.max_y - (0 if len(split_b or []) > 0 else height)
+                        pos.y = pos.max_y - (0 if len(split_b or []) > 0 else split_a.height)
                         pos.x = context.margin.left
 
                 else:
@@ -60,7 +60,7 @@ class Text(Writable):
             else:
                 if (pos.y - height) < pos.min_y:  # page overflow
                     ops.add_page()
-                    pos = pos.pos_zero()
+                    pos.pos_zero()
 
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)

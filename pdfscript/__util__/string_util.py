@@ -48,6 +48,8 @@ def split_text_by_height(ops: PDFOpset, style: TextStyle, pos: PDFPosition, text
     if split_pos is None:
         return [TextChunk(text, necessary_height)]
     elif split_pos <= 0:
+        ops.add_page()
+        pos.pos_zero()
         return [TextChunk(text, chunk_height)]
     return [
         TextChunk(" ".join(all_tokens[:split_pos]), chunk_height),
