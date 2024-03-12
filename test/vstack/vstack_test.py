@@ -15,5 +15,5 @@ class VStackTest(TestCase):
         v_stack.text("Line 1")
         v_stack.text("Line 2")
 
-        script.render_as_file("vstack.pdf", interceptor)
+        script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_vstack.txt")

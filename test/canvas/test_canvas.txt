@@ -1,0 +1,2 @@
+draw_line(10, 10, 100, 100, LineStyle(stroke_color=None, stroke_opacity=1))
+draw_rect(10, 10, 100, 10, RectStyle(stroke_color=None, stroke_opacity=1, fill_color=None, fill_opacity=1))

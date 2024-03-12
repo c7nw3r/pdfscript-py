@@ -4,7 +4,7 @@ from pdfscript.__spi__.pdf_writable import PDFEvaluation
 from pdfscript.__spi__.protocols import PDFListener, PDFOpset
 from pdfscript.__spi__.styles import ParagraphStyle
 from pdfscript.__spi__.types import PDFPosition, Space
-from pdfscript.__util__.array_util import traverse
+from pdfscript.__util__.array_util import iterate
 from pdfscript.__util__.string_util import chunk_text, split_text_by_height
 from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.text import Text
@@ -38,7 +38,7 @@ class Paragraph(Text):
             if self.style.layout in ["col2", "col3"]:
                 splits = split_text_by_height(ops, self.style, pos, self.text, int(self.style.layout[-1]))
 
-                for is_first, is_last, split in traverse(splits):
+                for is_first, is_last, split in iterate(splits):
                     chunks = chunk_text(split.text, int(self.style.layout[-1]))
 
                     y_offsets = []

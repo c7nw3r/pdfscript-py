@@ -17,5 +17,5 @@ class ImageTest(TestCase):
         script.text("abcd")
         script.image(path, ImageStyle(width=50, height=30))
 
-        script.render_as_file("image.pdf", interceptor)
+        script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_image.txt")

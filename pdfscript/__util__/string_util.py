@@ -51,5 +51,5 @@ def split_text_by_height(ops: PDFOpset, style: TextStyle, pos: PDFPosition, text
         return [TextChunk(text, chunk_height)]
     return [
         TextChunk(" ".join(all_tokens[:split_pos]), chunk_height),
-        TextChunk(" ".join(all_tokens[split_pos:]), available_height - chunk_height)
+        *split_text_by_height(ops, style, pos, " ".join(all_tokens[split_pos:]), num_cols)
     ]
