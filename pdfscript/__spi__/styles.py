@@ -88,3 +88,6 @@ class RectStyle:
     stroke_opacity: float = 1
     fill_color: Optional[str] = None
     fill_opacity: float = 1
+
+
+DEFAULT_TITLE_STYLE = TextStyle(margin=Margin(10, 0, 10, 0))

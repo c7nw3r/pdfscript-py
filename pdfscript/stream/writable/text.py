@@ -14,12 +14,12 @@ class Text(Writable):
         self.listener = listener
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
-        y_offset = self.style.margin.top
+        # y_offset = self.style.margin.top
         x_offset = self.style.margin.left
 
         def space(ops: PDFOpset, pos: PDFPosition):
             w = ops.get_width_of_text(self.text, self.style, pos.max_x - pos.x) + x_offset
-            h = ops.get_height_of_text(self.text, self.style, pos.max_x - pos.x) + y_offset
+            h = ops.get_height_of_text(self.text, self.style, pos.max_x - pos.x) # + y_offset
 
             return Space(w, h).emit(self.listener, ops)
 
@@ -27,7 +27,7 @@ class Text(Writable):
             width, height = get_space(ops, pos)
             one_line = height <= ops.get_height_of_text(".", self.style)
 
-            pos.move_y_offset(y_offset)
+            pos.move_y_offset(-self.style.margin.top)
 
             if not one_line:
                 if (pos.y - height) < pos.min_y:  # page overflow
@@ -68,5 +68,6 @@ class Text(Writable):
 
                 pos.x += width
 
+            pos.move_y_offset(-self.style.margin.bottom)
 
         return PDFEvaluation(space, instr)

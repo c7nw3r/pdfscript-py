@@ -4,6 +4,8 @@ from enum import Enum
 from reportlab.lib import pagesizes
 from reportlab.lib.units import inch
 
+from pdfscript.__spi__.pdf_font_registry import PDFFontRegistry
+
 
 class PageFormat(Enum):
     # ISO 216 standard page formats; see eg https://en.wikipedia.org/wiki/ISO_216
@@ -86,3 +88,14 @@ class PDFContext:
     format: PageFormat
     margin: PageMargin
     draw_bbox: bool = False
+    tile1_size: int = 20
+    tile2_size: int = 18
+    tile3_size: int = 16
+
+    def __post_init__(self):
+        self.fonts = PDFFontRegistry()
+        self.sizes = {
+            "title1": self.tile1_size,
+            "title2": self.tile2_size,
+            "title3": self.tile3_size,
+        }

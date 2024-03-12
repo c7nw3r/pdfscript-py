@@ -38,10 +38,11 @@ class PDFPosition(PDFCoords):
         return PDFPosition(self.x, self.y, self.min_x, self.min_y, self.max_x, self.max_y)
 
     def move_x_offset(self, amount: Number = 0):
+        # self.x += amount
         pass
 
     def move_y_offset(self, amount: Number = 0):
-        pass
+        self.y += amount
 
     def move_to(self, x: Number, y: Number):
         self.x = x
@@ -113,3 +114,16 @@ class TextChunk:
 
     def __len__(self):
         return len(self.text)
+
+
+@dataclass
+class FontFamily:
+    regular: str
+    bold: str
+    italic: str
+    bold_italic: str
+
+
+@dataclass
+class LocalFontFamily(FontFamily):
+    path: str

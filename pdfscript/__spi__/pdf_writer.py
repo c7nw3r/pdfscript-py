@@ -13,6 +13,7 @@ from pdfscript.stream.writable.image import Image
 from pdfscript.stream.writable.paragraph import Paragraph
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle, Text
+from pdfscript.stream.writable.title import Title
 
 
 class PDFCanvas:
@@ -46,6 +47,15 @@ class PDFWriter(PDFCanvas):
 
     def bold(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
         self.objects.append(Bold(content, style, listener))
+
+    def title1(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.objects.append(Title(content, style, order=1, listener=listener))
+
+    def title2(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.objects.append(Title(content, style, order=2, listener=listener))
+
+    def title3(self, content: str, style: TextStyle = TextStyle(), listener: PDFListener = NoOpListener()):
+        self.objects.append(Title(content, style, order=3, listener=listener))
 
     def paragraph(self, content: str, style: ParagraphStyle = ParagraphStyle(), listener: PDFListener = NoOpListener()):
         self.objects.append(Paragraph(content, style, listener))

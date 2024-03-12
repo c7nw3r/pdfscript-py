@@ -3,11 +3,11 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 
 from pdfscript.__spi__.pdf_context import PDFContext, PageMargin, PageFormat
-from pdfscript.__spi__.pdf_font_registry import PDFFontRegistry
 from pdfscript.__spi__.pdf_writable import PDFEvaluations
 from pdfscript.__spi__.pdf_writer import PDFWriter, PDFCanvas
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle, ParagraphStyle
+from pdfscript.__spi__.styles import ImageStyle, VStackStyle, HStackStyle, RectStyle, ParagraphStyle, \
+    DEFAULT_TITLE_STYLE
 from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.pdf_script_stream import PDFScriptStream
 from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
@@ -19,7 +19,6 @@ from pdfscript.stream.writable.text import TextStyle
 class PDFScript:
     def __init__(self, context: PDFContext):
         self.context = context
-        self.font_registry = PDFFontRegistry()
         self.header_writer = PDFWriter(context)
         self.center_writer = PDFWriter(context)
         self.footer_writer = PDFWriter(context)
@@ -37,6 +36,15 @@ class PDFScript:
 
     def paragraph(self, content: str, style: ParagraphStyle = ParagraphStyle(), listener: PDFListener = NoOpListener()):
         self.center_writer.paragraph(content, style, listener)
+
+    def title1(self, content: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = NoOpListener):
+        self.center_writer.title1(content, style, listener)
+
+    def title2(self, content: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = NoOpListener):
+        self.center_writer.title2(content, style, listener)
+
+    def title3(self, content: str, style: TextStyle = DEFAULT_TITLE_STYLE, listener: PDFListener = NoOpListener):
+        self.center_writer.title3(content, style, listener)
 
     def image(self, src: str, style: ImageStyle = ImageStyle()):
         self.center_writer.image(src, style)

@@ -55,3 +55,9 @@ def split_text_by_height(ops: PDFOpset, style: TextStyle, pos: PDFPosition, text
         TextChunk(" ".join(all_tokens[:split_pos]), chunk_height),
         *split_text_by_height(ops, style, pos.with_pos_zero(), " ".join(all_tokens[split_pos:]), num_cols)
     ]
+
+
+def get_filename(path: str) -> str:
+    idx1 = path.rfind("/")
+    idx2 = path.rfind(".")
+    return path[max(0, idx1):idx2 if idx2 >= 0 else None]
