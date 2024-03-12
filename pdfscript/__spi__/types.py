@@ -63,6 +63,10 @@ class PDFPosition(PDFCoords):
     def with_max_y(self, amount: Number = 0):
         return PDFPosition(self.x, self.y, self.min_x, self.min_y, self.max_x, amount)
 
+    def pos_zero(self):
+        self.x = self.min_x
+        self.y = self.max_x
+
     def with_pos_zero(self):
         return PDFPosition(self.min_x, self.max_y, self.min_x, self.min_y, self.max_x, self.max_y)
 

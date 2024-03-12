@@ -58,6 +58,10 @@ class Text(Writable):
                     pos.y -= height
                     pos.x = pos.min_x
             else:
+                if (pos.y - height) < pos.min_y:  # page overflow
+                    ops.add_page()
+                    pos = pos.pos_zero()
+
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
                 bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
                 bbox.emit(self.listener, ops)
