@@ -10,7 +10,6 @@ from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.text import Text
 
 
-# TODO: col layout overflow
 class Paragraph(Text):
     def __init__(self, text: str, style: ParagraphStyle, listener: PDFListener = NoOpListener()):
         super().__init__(text, style, listener)
@@ -61,7 +60,9 @@ class Paragraph(Text):
                         y_offsets.append(pos.y - new_pos.y)
                         new_pos.y = y
 
-                    pos.y -= max(y_offsets) if max(y_offsets) > 0 else get_space(ops, pos).height
+                    height = get_space(ops, pos).height
+                    y_offset = max(y_offsets) if max(y_offsets) > 0 else height
+                    pos.y -= y_offset if y_offset >= height else height
 
                     if not is_last:
                         ops.add_page()
