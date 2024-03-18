@@ -30,3 +30,6 @@ class NoOpInterceptor(PDFOpset):
 
     def add_page(self):
         pass
+
+    def page(self):
+        pass

@@ -36,6 +36,9 @@ class AuditInterceptor(PDFOpset):
     def add_page(self):
         self.audit_log.append("add_page")
 
+    def page(self):
+        pass
+
     def __iter__(self):
         for e in self.audit_log:
             yield e

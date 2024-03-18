@@ -33,7 +33,7 @@ class HStack(Writable):
             original_y = pos.y
             width, height = get_space(ops, pos)
 
-            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
 
             if self.style.align == Align.RIGHT:
                 pos.x += math.floor(pos.max_x - pos.x - width)

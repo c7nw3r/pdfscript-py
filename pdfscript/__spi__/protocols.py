@@ -39,6 +39,10 @@ class PDFOpset(Protocol):
     def add_page(self):
         pass
 
+    @abstractmethod
+    def page(self):
+        pass
+
 
 class PDFListener(Protocol):
 

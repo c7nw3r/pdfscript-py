@@ -32,7 +32,7 @@ class TableRow(Writable):
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)
-            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
 
             if (pos.y - height) < pos.min_y:
                 ops.add_page()

@@ -85,8 +85,7 @@ class PDFScript:
         return buf.read()
 
     def render_as_file(self, path: str, interceptor: PDFOpset = NoOpInterceptor()):
-        file_name = path[max(0, path.rfind("/")):]
-        document = canvas.Canvas(file_name)
+        document = canvas.Canvas(path)
         self._render(document, interceptor)
 
         with open(path, "r") as file:

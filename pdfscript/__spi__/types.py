@@ -94,9 +94,9 @@ class Margin:
         yield self.left
 
 
-# TODO: add page info
 @dataclass
 class BoundingBox:
+    page: Number
     x1: Number
     y1: Number
     x2: Number

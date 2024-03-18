@@ -32,7 +32,7 @@ class Table(Writable):
                 pos.x = pos.min_x
                 pos.y -= 20  # FIXME: magic number
 
-            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
             if context.draw_bbox:
                 ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))
 

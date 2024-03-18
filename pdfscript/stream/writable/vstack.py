@@ -34,7 +34,7 @@ class VStack(Writable):
             width, height = get_space(ops, pos)
             pos.move_y_offset(self.style.margin.top)
 
-            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
 
             index = 0
             for evaluation in evaluations:

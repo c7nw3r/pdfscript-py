@@ -12,6 +12,7 @@ from pdfscript.stream.writable.text import TextStyle
 class PDFScriptStream(PDFOpset):
 
     def __init__(self, canvas: Canvas, context: PDFContext, interceptor: PDFOpset):
+        self.page_num = 0
         self.canvas = canvas
         self.context = context
         self.interceptor = interceptor
@@ -55,7 +56,7 @@ class PDFScriptStream(PDFOpset):
         if style.stroke_color:
             self.canvas.setStrokeColor("white", 0)
 
-    def get_width_of_text(self, text: str, style: TextStyle,  max_x: Optional[Number] = None):
+    def get_width_of_text(self, text: str, style: TextStyle, max_x: Optional[Number] = None):
         self.interceptor.get_width_of_text(text, style, max_x)
 
         from reportlab.pdfbase.pdfmetrics import stringWidth
@@ -109,3 +110,7 @@ class PDFScriptStream(PDFOpset):
         # TODO: render_header
         # TODO: render_footer
         self.canvas.showPage()
+        self.page_num += 1
+
+    def page(self):
+        return self.page_num

@@ -39,7 +39,7 @@ class Text(Writable):
 
                         if split_a is not None:
                             ops.add_text(split_a.text, pos.with_x_offset(x_offset), self.style)
-                            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - split_a.height)
+                            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - split_a.height)
                             bbox.emit(self.listener, ops)
 
                         if split_b is not None:
@@ -52,7 +52,7 @@ class Text(Writable):
                 else:
                     ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
 
-                    bbox = BoundingBox(pos.x, pos.y, pos.x + (pos.max_x - pos.x), pos.y - height)
+                    bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + (pos.max_x - pos.x), pos.y - height)
                     bbox.emit(self.listener, ops)
 
                     pos.y -= height
@@ -63,7 +63,7 @@ class Text(Writable):
                     pos.pos_zero()
 
                 ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
-                bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+                bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
                 bbox.emit(self.listener, ops)
 
                 pos.x += width

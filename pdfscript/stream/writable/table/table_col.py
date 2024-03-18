@@ -40,7 +40,7 @@ class TableCol(Writable):
             width, height = get_space(ops, pos)
             top, right, bottom, left = self.style.margin
 
-            bbox = BoundingBox(pos.x, pos.y, pos.x + width, pos.y - height)
+            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
             pos.with_x_offset(get_gap(pos)[0])
 
             ops.draw_line(pos.x, pos.y, pos.x + width, pos.y, self.style.border)  # top
