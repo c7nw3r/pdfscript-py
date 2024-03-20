@@ -13,7 +13,7 @@ class BoldTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.bold(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
+        script.bold(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_bold.txt")

@@ -6,10 +6,11 @@ from pdfscript.__spi__.types import BoundingBox, Space
 
 
 class BBoxListener(PDFListener):
-    def __init__(self, bbox_type: Optional[str] = None, draw: bool = False):
+    def __init__(self, bbox_type: Optional[str] = None, draw: bool = False, seed=None):
         self.type = bbox_type
         self.draw = draw
         self.list = []
+        self.seed = seed
 
     def on_space(self, space: Space, ops: PDFOpset):
         pass
@@ -17,6 +18,7 @@ class BBoxListener(PDFListener):
     def on_instr(self, bbox: BoundingBox, ops: PDFOpset):
         if self.draw:
             import random
+            random.seed(self.seed)
             r = random.randint(0, 255)
             g = random.randint(0, 255)
             b = random.randint(0, 255)

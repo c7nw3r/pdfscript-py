@@ -11,6 +11,7 @@ from pdfscript.__spi__.types import PDFPosition, Number
 from pdfscript.pdf_script_stream import PDFScriptStream
 from pdfscript.stream.interceptor.noop_interceptor import NoOpInterceptor
 from pdfscript.stream.listener.noop_listener import DEV_NULL
+from pdfscript.stream.writable.list.list_items_writer import ListItemsWriter
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle
 
@@ -61,6 +62,11 @@ class PDFScript:
     def table(self):
         configurer = TableRowWriter(self.context)
         self.center_writer.table(configurer)
+        return configurer
+
+    def list_items(self):
+        configurer = ListItemsWriter(self.context)
+        self.center_writer.list_items(configurer)
         return configurer
 
     def rect(self, x1: Number, y1: Number, x2: Number, y2: Number, style: RectStyle = RectStyle()):

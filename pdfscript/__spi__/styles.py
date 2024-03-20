@@ -20,6 +20,7 @@ class TextStyle:
     color: Optional[str] = None
     margin: Margin = Margin(0, 0, 0, 0)
     line_clamp: Optional[float] = None
+    left_indent: Number = 0
 
     @property
     def space_after(self):
@@ -31,6 +32,8 @@ class TextStyle:
                               fontName=self.font_name,
                               fontSize=self.font_size,
                               leading=self.space_after,
+                              leftIndent=self.left_indent,
+                              # bulletIndent=50,
                               alignment=self.align.value)
 
 

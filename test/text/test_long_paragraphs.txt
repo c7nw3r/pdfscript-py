@@ -1,4 +1,4 @@
-add_text("Wikimedia Commons – repository of images, sounds, videos, and general media", 72.0, 769.8897637795277, ParagraphStyle(font_name='Courier', font_size=14, align=<Align.LEFT: 0>, color=None, margin=Margin(top=0, right=0, bottom=10, left=0), line_clamp=None, layout='block', gap=0))
-draw_rect(72.0, 769.8897637795277, 523.2755905511812, 734.8897637795277, RectStyle(stroke_color=None, stroke_opacity=1, fill_color='red', fill_opacity=0.1))
-add_text("Wikispecies – taxonomic catalog of species", 72.0, 689.8897637795277, ParagraphStyle(font_name='Courier', font_size=14, align=<Align.LEFT: 0>, color=None, margin=Margin(top=0, right=0, bottom=10, left=0), line_clamp=None, layout='block', gap=0))
-draw_rect(72.0, 689.8897637795277, 424.8, 672.3897637795277, RectStyle(stroke_color=None, stroke_opacity=1, fill_color='red', fill_opacity=0.1))
+add_text("Wikimedia Commons – repository of images, sounds, videos, and general media", 72.0, 769.8897637795277, font_name=Courier, font_size=14, align=Align.LEFT, margin=Margin(top=0, right=0, bottom=10, left=0), layout=block)
+draw_rect(72.0, 769.8897637795277, 523.2755905511812, 734.8897637795277, RectStyle(stroke_color=None, stroke_opacity=1, fill_color='rgb(68,32,130)', fill_opacity=0.1))
+add_text("Wikispecies – taxonomic catalog of species", 72.0, 689.8897637795277, font_name=Courier, font_size=14, align=Align.LEFT, margin=Margin(top=0, right=0, bottom=10, left=0), layout=block)
+draw_rect(72.0, 689.8897637795277, 424.8, 672.3897637795277, RectStyle(stroke_color=None, stroke_opacity=1, fill_color='rgb(68,32,130)', fill_opacity=0.1))

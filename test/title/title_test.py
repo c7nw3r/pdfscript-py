@@ -14,7 +14,7 @@ class TitleTest(TestCase):
 
         script = PDFScript.a4()
         script.paragraph(WIKIPEDIA_TEXT[0:24])
-        script.title1(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True))
+        script.title1(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True, seed=1))
         script.paragraph(WIKIPEDIA_TEXT)
 
         script.render_as_stream(interceptor)
@@ -25,7 +25,7 @@ class TitleTest(TestCase):
 
         script = PDFScript.a4()
         script.paragraph(WIKIPEDIA_TEXT[0:24])
-        script.title2(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True))
+        script.title2(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True, seed=1))
         script.paragraph(WIKIPEDIA_TEXT)
 
         script.render_as_stream(interceptor)
@@ -36,7 +36,7 @@ class TitleTest(TestCase):
 
         script = PDFScript.a4()
         script.paragraph(WIKIPEDIA_TEXT[0:24])
-        script.title3(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True))
+        script.title3(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True, seed=1))
         script.paragraph(WIKIPEDIA_TEXT)
 
         script.render_as_stream(interceptor)

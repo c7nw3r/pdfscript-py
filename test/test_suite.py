@@ -3,6 +3,7 @@ import unittest
 from test.bold.bold_test import BoldTest
 from test.hstack.hstack_test import HStackTest
 from test.image.image_test import ImageTest
+from test.list_items.list_items_test import ListItemsTest
 from test.table.table_test import TableTest
 from test.text.text_test import TextTest
 from test.title.title_test import TitleTest
@@ -18,6 +19,7 @@ def suite():
     test_suite.addTest(unittest.makeSuite(TextTest))
     test_suite.addTest(unittest.makeSuite(BoldTest))
     test_suite.addTest(unittest.makeSuite(TitleTest))
+    test_suite.addTest(unittest.makeSuite(ListItemsTest))
 
     return test_suite
 

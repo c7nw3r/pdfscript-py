@@ -10,6 +10,7 @@ from pdfscript.stream.writable.canvas.canvas_line import CanvasLine
 from pdfscript.stream.writable.canvas.canvas_rect import CanvasRect
 from pdfscript.stream.writable.canvas.canvas_text import CanvasText
 from pdfscript.stream.writable.image import Image
+from pdfscript.stream.writable.list.list_items_writer import ListItemsWriter
 from pdfscript.stream.writable.paragraph import Paragraph
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 from pdfscript.stream.writable.text import TextStyle, Text
@@ -74,6 +75,10 @@ class PDFWriter(PDFCanvas):
     def table(self, configurer: TableRowWriter):
         from pdfscript.stream.writable.table.table import Table
         self.objects.append(Table(configurer))
+
+    def list_items(self, configurer: ListItemsWriter):
+        from pdfscript.stream.writable.list.list_items import ListItems
+        self.objects.append(ListItems(configurer))
 
     def write(self) -> PDFEvaluations:
         return PDFEvaluations([e.evaluate(self.context) for e in self.objects])

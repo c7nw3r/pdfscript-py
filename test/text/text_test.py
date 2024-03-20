@@ -14,7 +14,7 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.text(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
+        script.text(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph.txt")
@@ -23,7 +23,7 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.text(WIKIPEDIA_TEXT, TextStyle(font_name="Times-Bold", font_size=20), listener=BBoxListener(draw=True))
+        script.text(WIKIPEDIA_TEXT, TextStyle(font_name="Times-Bold", font_size=20), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_with_custom_font_justified.txt")
@@ -33,12 +33,12 @@ class TextTest(TestCase):
 
         script = PDFScript.a4()
         header = script.with_header()
-        header.text("Test asdf" * 10, listener=BBoxListener(draw=True))
+        header.text("Test asdf" * 10, listener=BBoxListener(draw=True, seed=1))
 
         footer = script.with_footer()
-        footer.text("Test asdf" * 10, listener=BBoxListener(draw=True))
+        footer.text("Test asdf" * 10, listener=BBoxListener(draw=True, seed=1))
 
-        script.text("Test asdf" * 20, TextStyle(font_size=16), listener=BBoxListener(draw=True))
+        script.text("Test asdf" * 20, TextStyle(font_size=16), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_with_header_and_footer.txt")
@@ -47,16 +47,16 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
-        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
-        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
-        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
+        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
+        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
+        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
+        script.paragraph(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_long_text.txt")
 
     def test_long_paragraphs(self):
-        listener = BBoxListener(draw=True)
+        listener = BBoxListener(draw=True, seed=1)
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
@@ -64,13 +64,13 @@ class TextTest(TestCase):
         script.paragraph("Wikispecies – taxonomic catalog of species", listener=listener)
 
         script.render_as_stream(interceptor)
-        interceptor.save(f"{get_local_dir(__file__)}/test_long_paragraphs.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_long_paragraphs.txt")
 
     def test_text_overflow(self):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.paragraph("This is an example text. " * 200, listener=BBoxListener(draw=True))
+        script.paragraph("This is an example text. " * 200, listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_text_overflow.txt")
@@ -79,7 +79,7 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.bold(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True))
+        script.bold(WIKIPEDIA_TEXT, listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_bold.txt")
@@ -88,7 +88,7 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col2", gap=5), listener=BBoxListener(draw=True))
+        script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col2", gap=5), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_col2_layout.txt")
@@ -97,8 +97,8 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col3", gap=5), listener=BBoxListener(draw=True))
-        script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col3", gap=5), listener=BBoxListener(draw=True))
+        script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col3", gap=5), listener=BBoxListener(draw=True, seed=1))
+        script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col3", gap=5), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_col3_layout.txt")
@@ -120,7 +120,7 @@ class TextTest(TestCase):
         interceptor = AuditInterceptor()
 
         script = PDFScript.a4()
-        script.paragraph(WIKIPEDIA_TEXT * 5, style=ParagraphStyle(layout="col3"), listener=BBoxListener(draw=True))
+        script.paragraph(WIKIPEDIA_TEXT * 5, style=ParagraphStyle(layout="col3"), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_long_paragraph_col3_layout.txt")
