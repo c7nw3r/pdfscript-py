@@ -4,6 +4,7 @@ from pdfscript.__spi__.styles import TableColStyle, LineStyle, TableRowStyle
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
 from test import get_local_dir
+from test.consts import WIKIPEDIA_TEXT
 
 
 class TableTest(TestCase):
@@ -76,3 +77,24 @@ class TableTest(TestCase):
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_and_table.txt")
+
+    def test_different_col_height(self):
+        interceptor = AuditInterceptor()
+        script = PDFScript.a4()
+
+        script.paragraph("abcd" * 10)
+
+        table = script.table()
+        row1 = table.row()
+        row1.col(TableColStyle()).text("Column 1")
+        row1.col(TableColStyle()).text("Column 2")
+        row1.col(TableColStyle()).text("Column 3")
+        row2 = table.row()
+        row2.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:500])
+        row2.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:550])
+        row2.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:400])
+
+        script.paragraph("abcd" * 10)
+
+        script.render_as_stream(interceptor)
+        interceptor.verify(f"{get_local_dir(__file__)}/test_different_col_height.txt")

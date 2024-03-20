@@ -45,7 +45,7 @@ class TableRow(Writable):
                 new_pos.min_x += (pos.max_x - pos.min_x) / len(evaluations)
                 new_pos.max_x += (pos.max_x - pos.min_x) / len(evaluations)
 
-            evaluations.execute(ops, new_pos, postprocess)
+            evaluations.execute(ops, new_pos, postprocess, row_height=height)
 
             pos.x = pos.min_x
             pos.y -= height

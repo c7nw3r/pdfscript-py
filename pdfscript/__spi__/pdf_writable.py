@@ -44,9 +44,10 @@ class PDFEvaluations:
     def execute(self,
                 stream: PDFOpset,
                 box: PDFPosition,
-                postprocess: Callable[[], None] = lambda: None):
+                postprocess: Callable[[], None] = lambda: None,
+                **kwargs):
         for evaluation in self.evaluations:
-            evaluation.instr(stream, box, evaluation.space)
+            evaluation.instr(stream, box, evaluation.space, **kwargs)
             if postprocess:
                 postprocess()
 

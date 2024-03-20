@@ -36,9 +36,11 @@ class TableCol(Writable):
 
             return Space(w, height).emit(self.listener, ops)
 
-        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
+        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier, **kwargs):
             width, height = get_space(ops, pos)
             top, right, bottom, left = self.style.margin
+
+            height = kwargs.get("row_height", height)
 
             bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
             pos.with_x_offset(get_gap(pos)[0])
