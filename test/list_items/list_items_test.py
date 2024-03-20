@@ -21,3 +21,14 @@ class ListItemsTest(TestCase):
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_unordered_list_v2.txt")
+
+    def test_one_line_items(self):
+        interceptor = AuditInterceptor()
+        script = PDFScript.a4()
+
+        ul = script.list_items()
+        ul.list_item(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True, seed=1))
+        ul.list_item(WIKIPEDIA_TEXT[0:24], listener=BBoxListener(draw=True, seed=1))
+
+        script.render_as_stream(interceptor)
+        interceptor.save(f"{get_local_dir(__file__)}/test_one_line_items.txt")

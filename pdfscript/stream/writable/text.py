@@ -16,10 +16,11 @@ class Text(Writable):
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         # y_offset = self.style.margin.top
         x_offset = self.style.margin.left
+        x_indent = 10 if len(self.get_prefix()) > 0 else 0
 
         def space(ops: PDFOpset, pos: PDFPosition):
-            w = ops.get_width_of_text(self.text, self.style, pos.max_x - pos.x) + x_offset
-            h = ops.get_height_of_text(self.text, self.style, pos.max_x - pos.x) # + y_offset
+            w = ops.get_width_of_text(self.text, self.style, pos.max_x - pos.x) + x_offset + x_indent
+            h = ops.get_height_of_text(self.text, self.style, pos.max_x - pos.x)
 
             return Space(w, h).emit(self.listener, ops)
 
@@ -29,9 +30,11 @@ class Text(Writable):
 
             pos.move_y_offset(-self.style.margin.top)
 
+            text = self.get_prefix() + self.text
+
             if not one_line:
                 if (pos.y - height) < pos.min_y:  # page overflow
-                    _text = self.text
+                    _text = text
                     _height = height
 
                     while len(_text) > 0:
@@ -50,7 +53,7 @@ class Text(Writable):
                         pos.x = context.margin.left
 
                 else:
-                    ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
+                    ops.add_text(text, pos.with_x_offset(x_offset), self.style)
 
                     bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + (pos.max_x - pos.x), pos.y - height)
                     bbox.emit(self.listener, ops)
@@ -62,7 +65,7 @@ class Text(Writable):
                     ops.add_page()
                     pos.pos_zero()
 
-                ops.add_text(self.text, pos.with_x_offset(x_offset), self.style)
+                ops.add_text(text, pos.with_x_offset(x_offset), self.style)
                 bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
                 bbox.emit(self.listener, ops)
 
@@ -71,3 +74,6 @@ class Text(Writable):
             pos.move_y_offset(-self.style.margin.bottom)
 
         return PDFEvaluation(space, instr)
+
+    def get_prefix(self):
+        return ""

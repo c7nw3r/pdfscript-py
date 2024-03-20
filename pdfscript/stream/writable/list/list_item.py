@@ -11,8 +11,7 @@ from pdfscript.stream.writable.text import Text
 class ListItem(Text):
 
     def __init__(self, text: str, style: TextStyle, listener: PDFListener = NoOpListener()):
-        bullet = "<bullet>&bull;</bullet>"
-        super().__init__(bullet + text, style, listener)
+        super().__init__(text, style, listener)
 
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         self.style.left_indent = 10
@@ -23,4 +22,12 @@ class ListItem(Text):
             super_instr(ops, pos, get_space)
             pos.x = pos.min_x
 
+            one_line = height <= ops.get_height_of_text(".", self.style) + self.style.space_after
+            if one_line:
+                pos.y -= height
+
         return PDFEvaluation(super_space, instr)
+
+    def get_prefix(self):
+        return "<bullet>&bull;</bullet>"
+
