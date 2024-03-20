@@ -31,9 +31,10 @@ def split_text_by_height(ops: PDFOpset, style: TextStyle, pos: PDFPosition, text
     if available_height <= 0:
         return [TextChunk(text, necessary_height)]
 
+    import re
     chunk_height = necessary_height
-    all_tokens = text.split(" ")
-    tokens = text.split(" ")
+    all_tokens = re.split(' |\n', text)
+    tokens = [*all_tokens]
 
     split_pos = None
     while chunk_height > available_height:

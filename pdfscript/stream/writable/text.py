@@ -31,6 +31,7 @@ class Text(Writable):
             pos.move_y_offset(-self.style.margin.top)
 
             text = self.get_prefix() + self.text
+            text = text.replace(" ", " ")
 
             if not one_line:
                 if (pos.y - height) < pos.min_y:  # page overflow

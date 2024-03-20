@@ -84,9 +84,10 @@ class PDFScriptStream(PDFOpset):
         if pos.y <= pos.min_y:
             return None, TextChunk(text, necessary_height)
 
+        import re
         chunk_height = necessary_height
-        all_tokens = text.split(" ")
-        tokens = text.split(" ")
+        all_tokens = re.split(' |\n', text)
+        tokens = [*all_tokens]
 
         split_pos = None
         while chunk_height > available_height:

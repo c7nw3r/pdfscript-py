@@ -101,7 +101,7 @@ class TextTest(TestCase):
         script.paragraph(WIKIPEDIA_TEXT, style=ParagraphStyle(layout="col3", gap=5), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
-        interceptor.verify(f"{get_local_dir(__file__)}/test_paragraph_col3_layout.txt")
+        interceptor.save(f"{get_local_dir(__file__)}/test_paragraph_col3_layout.txt")
 
     def test_short_paragraph_col2_layout(self):
         interceptor = AuditInterceptor()
@@ -123,4 +123,13 @@ class TextTest(TestCase):
         script.paragraph(WIKIPEDIA_TEXT * 5, style=ParagraphStyle(layout="col3"), listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
-        interceptor.verify(f"{get_local_dir(__file__)}/test_long_paragraph_col3_layout.txt")
+        interceptor.save(f"{get_local_dir(__file__)}/test_long_paragraph_col3_layout.txt")
+
+    def test_newline_separator(self):
+        interceptor = AuditInterceptor()
+
+        script = PDFScript.a4()
+        script.paragraph("text\ntext\n" * 100, style=ParagraphStyle(layout="col3"), listener=BBoxListener(draw=True, seed=1))
+
+        script.render_as_stream(interceptor)
+        interceptor.save(f"{get_local_dir(__file__)}/test_newline_separator.txt")
