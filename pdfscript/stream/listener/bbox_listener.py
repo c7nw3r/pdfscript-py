@@ -16,6 +16,11 @@ class BBoxListener(PDFListener):
 
     def on_instr(self, bbox: BoundingBox, ops: PDFOpset):
         if self.draw:
-            ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(fill_color="red", fill_opacity=0.1))
+            import random
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
+            color = f"rgb({r},{g},{b})"
+            ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(fill_color=color, fill_opacity=0.1))
 
         self.list.append((self.type, bbox))
