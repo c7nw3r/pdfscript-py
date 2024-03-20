@@ -22,7 +22,7 @@ class Text(Writable):
             w = ops.get_width_of_text(self.text, self.style, pos.max_x - pos.x) + x_offset + x_indent
             h = ops.get_height_of_text(self.text, self.style, pos.max_x - pos.x)
 
-            return Space(w, h).emit(self.listener, ops)
+            return Space(min(pos.max_x - pos.min_x, w), h).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             width, height = get_space(ops, pos)

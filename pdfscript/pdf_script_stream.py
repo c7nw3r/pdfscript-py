@@ -91,7 +91,7 @@ class PDFScriptStream(PDFOpset):
 
         split_pos = None
         while chunk_height > available_height:
-            split_pos = len(tokens) - 10
+            split_pos = len(tokens) - 1
             tokens = tokens[:split_pos]
             chunk = " ".join(tokens)
 
