@@ -20,4 +20,4 @@ class ListItemsTest(TestCase):
         ul.list_item(WIKIPEDIA_TEXT[0:200], listener=BBoxListener(draw=True, seed=1))
 
         script.render_as_stream(interceptor)
-        interceptor.verify(f"{get_local_dir(__file__)}/test_unordered_list.txt")
+        interceptor.verify(f"{get_local_dir(__file__)}/test_unordered_list_v2.txt")

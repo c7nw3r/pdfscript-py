@@ -42,14 +42,18 @@ class PDFEvaluations:
         return [to_space(e) for e in self.evaluations]
 
     def execute(self,
-                stream: PDFOpset,
-                box: PDFPosition,
-                postprocess: Callable[[], None] = lambda: None,
+                ops: PDFOpset,
+                pos: PDFPosition,
+                postprocess: Callable[[PDFOpset], PDFOpset] = lambda x: x,
+                preprocess: Callable[[PDFOpset], PDFOpset] = lambda x: x,
                 **kwargs):
         for evaluation in self.evaluations:
-            evaluation.instr(stream, box, evaluation.space, **kwargs)
+            if preprocess:
+                ops = preprocess(ops)
+
+            evaluation.instr(ops, pos, evaluation.space, **kwargs)
             if postprocess:
-                postprocess()
+                ops = postprocess(ops)
 
     def __len__(self):
         return len(self.evaluations)

@@ -41,6 +41,7 @@ class TableCol(Writable):
             top, right, bottom, left = self.style.margin
 
             height = kwargs.get("row_height", height)
+            height = min(height, pos.y - pos.min_y)
 
             bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
             pos.with_x_offset(get_gap(pos)[0])

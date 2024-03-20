@@ -42,14 +42,16 @@ class HStack(Writable):
             elif self.style.align == Align.JUSTIFY:
                 gap = math.floor((pos.max_x - pos.x) - width) / (len(evaluations) - 1)
 
-                def postprocess():
+                def postprocess(_ops):
                     pos.x += gap
+                    return _ops
 
                 evaluations.execute(ops, pos, postprocess)
 
             else:
-                def postprocess():
+                def postprocess(_ops):
                     pos.x += self.style.gap
+                    return _ops
 
                 evaluations.execute(ops, pos, postprocess)
 

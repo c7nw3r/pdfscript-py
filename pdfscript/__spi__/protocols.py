@@ -5,6 +5,7 @@ from pdfscript.__spi__.styles import TextStyle, ImageStyle, LineStyle, RectStyle
 from pdfscript.__spi__.types import Number, PDFCoords, Space, BoundingBox, PDFPosition
 
 
+# TODO: rename style/styling to options
 class PDFOpset(Protocol):
 
     @abstractmethod

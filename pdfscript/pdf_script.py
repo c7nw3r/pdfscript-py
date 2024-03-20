@@ -113,7 +113,7 @@ class PDFScript:
         fh = self._calc_height(footer_eval, stream)
 
         hy = min(height - t, height - (hh + self.context.margin.header))
-        fy = min(b, fh + self.context.margin.footer)
+        fy = max(b, fh + self.context.margin.footer)
 
         # stream.draw_line(0, hy, width, hy, LineStyle(stroke_color="red"))
         # available_center_height = height - hy - fy

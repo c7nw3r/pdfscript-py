@@ -97,4 +97,17 @@ class TableTest(TestCase):
         script.paragraph("abcd" * 10)
 
         script.render_as_stream(interceptor)
-        interceptor.verify(f"{get_local_dir(__file__)}/test_different_col_height.txt")
+        interceptor.save(f"{get_local_dir(__file__)}/test_different_col_height.txt")
+
+    def test_too_long_col(self):
+        interceptor = AuditInterceptor()
+        script = PDFScript.a4()
+
+        table = script.table()
+        row1 = table.row()
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:800])
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:550])
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:400])
+
+        script.render_as_stream(interceptor)
+        interceptor.verify(f"{get_local_dir(__file__)}/test_too_long_col.txt")
