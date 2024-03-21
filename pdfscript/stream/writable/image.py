@@ -2,7 +2,7 @@ from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
 from pdfscript.__spi__.pdf_writable import Writable
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import ImageStyle, Align, RectStyle
+from pdfscript.__spi__.styles import ImageStyle, Align
 from pdfscript.__spi__.types import Space, PDFPosition, BoundingBox
 from pdfscript.stream.listener.noop_listener import NoOpListener
 
@@ -33,7 +33,6 @@ class Image(Writable):
             else:
                 pos.x = x + width
 
-            if context.draw_bbox:
-                ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))
+            bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)

@@ -7,6 +7,7 @@ from pdfscript.__spi__.protocols import PDFOpset, PDFListener
 from pdfscript.__spi__.styles import TableRowStyle, TextStyle
 from pdfscript.__spi__.types import PDFPosition, Space, BoundingBox, PDFCoords
 from pdfscript.__util__.array_util import flatten
+from pdfscript.stream.listener.listener_chain import PDFListenerChain
 from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.table.table_col_writer import TableColWriter
 
@@ -43,11 +44,12 @@ class TableRow(Writable):
             max_height = max([e.height for e in spaces])
             return Space(pos.max_x - pos.x, max_height).emit(self.listener, ops)
 
-        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
+        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier, **kwargs):
+            listener = PDFListenerChain([self.listener, kwargs["table_listener"]])
+
             col_width = (pos.max_x - pos.min_x - self.gap) / len(evaluations)
 
             width, height = get_space(ops, pos)
-            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
 
             new_pos = pos.copy()
             replay_buffer = []
@@ -64,6 +66,10 @@ class TableRow(Writable):
                 new_pos.x += self.style.gap
 
             if len(flatten(replay_buffer)) > 0:
+                max_height = pos.y - pos.min_y
+                bbox = LastBoundingBoxOnPage(ops.page(), pos.x, pos.y, pos.x + width, pos.y - min(max_height, height))
+                bbox.emit(listener, ops)
+
                 ops.add_page()
                 pos.pos_zero()
 
@@ -79,12 +85,13 @@ class TableRow(Writable):
 
                 row = TableRow(col_writer, self.style, self.listener)
                 _space, _instr = row.evaluate(context)
-                _instr(ops, pos, _space)
+                _instr(ops, pos, _space, **kwargs)
             else:
+                bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
+                bbox.emit(listener, ops)
+
                 pos.x = pos.min_x
                 pos.y -= height
-
-            return bbox.emit(self.listener, ops)
 
         return PDFEvaluation(space, instr)
 
@@ -116,3 +123,7 @@ class NewPageReplayBuffer(PDFOpsetAdapter, list):
         tbd
         """
         self.store = True
+
+
+class LastBoundingBoxOnPage(BoundingBox):
+    pass

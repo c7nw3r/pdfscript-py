@@ -13,8 +13,9 @@ class TableTest(TestCase):
     def test_table(self):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
+        listener = BBoxListener(draw=True, seed=1)
 
-        table = script.table()
+        table = script.table(listener=listener)
         row1 = table.row()
         row1.col().text("abcd" * 10)
         row1.col().text("abcd" * 10)
@@ -36,11 +37,12 @@ class TableTest(TestCase):
     def test_table_without_border(self):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
+        bbox_listener = BBoxListener(draw=True, seed=1)
 
         row_style = TableRowStyle(gap=5)
         col_style = TableColStyle(border=LineStyle("white"))
 
-        table = script.table()
+        table = script.table(listener=bbox_listener)
         row1 = table.row(row_style)
         row1.col(col_style).text("abcd" * 10)
         row1.col(col_style).text("abcd" * 10)
@@ -83,10 +85,11 @@ class TableTest(TestCase):
     def test_different_col_height(self):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
+        listener = BBoxListener(draw=True, seed=1)
 
         script.paragraph("abcd" * 10)
 
-        table = script.table()
+        table = script.table(listener=listener)
         row1 = table.row()
         row1.col(TableColStyle()).text("Column 1")
         row1.col(TableColStyle()).text("Column 2")
@@ -98,7 +101,7 @@ class TableTest(TestCase):
 
         script.paragraph("abcd" * 10)
 
-        script.render_as_stream(interceptor)
+        script.render_as_file("sample.pdf", interceptor)
         interceptor.save(f"{get_local_dir(__file__)}/test_different_col_height.txt")
 
     def test_too_long_col(self):

@@ -87,7 +87,6 @@ class PageMargin:
 class PDFContext:
     format: PageFormat
     margin: PageMargin
-    draw_bbox: bool = False
     tile1_size: int = 20
     tile2_size: int = 18
     tile3_size: int = 16

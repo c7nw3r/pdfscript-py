@@ -2,8 +2,8 @@ from pdfscript.__spi__.pdf_context import PDFContext
 from pdfscript.__spi__.pdf_evaluation import PDFEvaluation, SpaceSupplier
 from pdfscript.__spi__.pdf_writable import Writable
 from pdfscript.__spi__.protocols import PDFOpset, PDFListener
-from pdfscript.__spi__.styles import RectStyle
-from pdfscript.__spi__.types import PDFPosition, Space, BoundingBox
+from pdfscript.__spi__.types import PDFPosition, Space
+from pdfscript.stream.listener.bbox_merger_listener import BBoxMergerListener
 from pdfscript.stream.listener.noop_listener import NoOpListener
 from pdfscript.stream.writable.table.table_row_writer import TableRowWriter
 
@@ -25,18 +25,13 @@ class Table(Writable):
             height = sum([e.height for e in spaces])
             return Space(width, height).emit(self.listener, ops)
 
-        def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
-            width, height = get_space(ops, pos)
-
+        def instr(ops: PDFOpset, pos: PDFPosition, _get_space: SpaceSupplier):
             if pos.x > pos.min_x:
                 pos.x = pos.min_x
                 pos.y -= 20  # FIXME: magic number
 
-            bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
-            if context.draw_bbox:
-                ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(stroke_color="red"))
-
-            evaluations.execute(ops, pos)
-            return bbox.emit(self.listener, ops)
+            table_listener = BBoxMergerListener(self.listener)
+            evaluations.execute(ops, pos, table_listener=table_listener)
+            table_listener.flush(ops)
 
         return PDFEvaluation(space, instr)

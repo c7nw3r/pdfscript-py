@@ -59,5 +59,6 @@ class AuditInterceptor(PDFOpset):
             to_compare = file.readlines()
 
         from unittest import TestCase
+        TestCase().assertEqual(len(to_compare), len(self.audit_log))
         for a, b in zip(to_compare, self.audit_log):
-            TestCase().assertEquals(a.strip(), b.strip())
+            TestCase().assertEqual(a.strip(), b.strip())

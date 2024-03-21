@@ -102,8 +102,8 @@ class BoundingBox:
     x2: Number
     y2: Number
 
-    def emit(self, listener, ops):
-        listener.on_instr(self, ops)
+    def emit(self, listener, ops, **kwargs):
+        listener.on_instr(self, ops, **kwargs)
         return self
 
 
