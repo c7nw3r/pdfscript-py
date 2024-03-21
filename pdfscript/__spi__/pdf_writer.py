@@ -72,9 +72,9 @@ class PDFWriter(PDFCanvas):
         from pdfscript.stream.writable.hstack import HStack
         self.objects.append(HStack(configurer, style))
 
-    def table(self, configurer: TableRowWriter):
+    def table(self, configurer: TableRowWriter, listener: PDFListener = NoOpListener()):
         from pdfscript.stream.writable.table.table import Table
-        self.objects.append(Table(configurer))
+        self.objects.append(Table(configurer, listener))
 
     def list_items(self, configurer: ListItemsWriter):
         from pdfscript.stream.writable.list.list_items import ListItems

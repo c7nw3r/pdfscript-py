@@ -3,6 +3,7 @@ from unittest import TestCase
 from pdfscript.__spi__.styles import TableColStyle, LineStyle, TableRowStyle
 from pdfscript.pdf_script import PDFScript
 from pdfscript.stream.interceptor.audit_interceptor import AuditInterceptor
+from pdfscript.stream.listener.bbox_listener import BBoxListener
 from test import get_local_dir
 from test.consts import WIKIPEDIA_TEXT
 
@@ -36,8 +37,8 @@ class TableTest(TestCase):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
 
-        row_style = TableRowStyle()
-        col_style = TableColStyle(border=LineStyle("white"), gap=5)
+        row_style = TableRowStyle(gap=5)
+        col_style = TableColStyle(border=LineStyle("white"))
 
         table = script.table()
         row1 = table.row(row_style)
@@ -61,16 +62,17 @@ class TableTest(TestCase):
     def test_paragraph_and_table(self):
         interceptor = AuditInterceptor()
         script = PDFScript.a4()
+        listener = BBoxListener(draw=True, seed=1)
 
         script.paragraph("abcd" * 10)
 
-        table = script.table()
-        row1 = table.row()
-        row1.col(TableColStyle(gap=10)).text(
+        table = script.table(listener=listener)
+        row1 = table.row(TableRowStyle(gap=10))
+        row1.col().text(
             "The Foundation has grown rapidly throughout its existence. By 2022, it employed around 700 staff")
-        row1.col(TableColStyle(gap=10)).text(
+        row1.col().text(
             "and contractors, with annual revenues of $155 million, annual expenses of $146 million, net assets")
-        row1.col(TableColStyle(gap=10)).text(
+        row1.col().text(
             "of $240 million and a growing endowment, which surpassed $100 million in June 2021.")
 
         script.paragraph("abcd" * 10)
@@ -111,3 +113,18 @@ class TableTest(TestCase):
 
         script.render_as_stream(interceptor)
         interceptor.verify(f"{get_local_dir(__file__)}/test_too_long_col.txt")
+
+    def test_col4(self):
+        interceptor = AuditInterceptor()
+        script = PDFScript.a4()
+
+        table = script.table()
+        row1 = table.row()
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:463])
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:250])
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:200])
+        row1.col(TableColStyle()).text(WIKIPEDIA_TEXT[0:200])
+        script.text(WIKIPEDIA_TEXT)
+
+        script.render_as_stream(interceptor)
+        interceptor.verify(f"{get_local_dir(__file__)}/test_col4.txt")

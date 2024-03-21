@@ -88,6 +88,7 @@ class LineStyle:
 class TableColStyle:
     margin: Margin = Margin(5, 5, 5, 5)
     border: LineStyle = LineStyle()
+    # TODO: remove
     gap: Number = 0
 
 

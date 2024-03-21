@@ -59,9 +59,9 @@ class PDFScript:
         self.center_writer.h_stack(configurer, style)
         return configurer
 
-    def table(self):
+    def table(self, listener: PDFListener = DEV_NULL):
         configurer = TableRowWriter(self.context)
-        self.center_writer.table(configurer)
+        self.center_writer.table(configurer, listener)
         return configurer
 
     def list_items(self):

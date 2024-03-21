@@ -18,49 +18,50 @@ class TableRow(Writable):
         self.style = style
         self.listener = listener
 
+    @property
+    def gap(self):
+        return (len(self.configurer.objects) - 1) * self.style.gap
+
     def evaluate(self, context: PDFContext) -> PDFEvaluation:
         writer = TableColWriter(context)
         writer.objects = self.configurer.objects
         evaluations = writer.write()
 
         def space(ops: PDFOpset, pos: PDFPosition):
-            new_pos = pos.with_max_x(pos.x + (pos.max_x - pos.min_x) / len(evaluations))
+            col_width = (pos.max_x - pos.min_x - self.gap) / len(evaluations)
 
-            def postprocess(_pos: PDFPosition, _space: Space):
-                _pos.max_x += ((pos.max_x - pos.min_x) / len(evaluations))
-                _pos.x += ((pos.max_x - pos.min_x) / len(evaluations))
+            spaces = []
+            new_pos = pos.copy()
+            for evaluation in evaluations:
+                new_pos = new_pos.with_max_x(new_pos.x + col_width)
+                col_space = evaluation.space(ops, new_pos)
 
-            spaces = evaluations.get_spaces(ops, new_pos, True, False, postprocess)
-            return Space(pos.max_x - pos.x, max([e.height for e in spaces])).emit(self.listener, ops)
+                new_pos.x += col_width
+                spaces.append(col_space)
+                new_pos.x += self.style.gap
+
+            max_height = max([e.height for e in spaces])
+            return Space(pos.max_x - pos.x, max_height).emit(self.listener, ops)
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
+            col_width = (pos.max_x - pos.min_x - self.gap) / len(evaluations)
+
             width, height = get_space(ops, pos)
             bbox = BoundingBox(ops.page(), pos.x, pos.y, pos.x + width, pos.y - height)
 
-            # if (pos.y - height) < pos.min_y:
-            #     ops.add_page()
-            #     pos.y = pos.max_y
-
-            col_max_x = pos.x + (pos.max_x - pos.min_x) / len(evaluations)
-            new_pos = pos.with_max_x(col_max_x)  # .with_max_y(pos.y - height)
-
-            # def preprocess(_ops: PDFOpset):
-            #     return NewPageReplayBuffer(ops)
-
-            # def postprocess(_ops: PDFOpset):
-            #     new_pos.min_x += (pos.max_x - pos.min_x) / len(evaluations)
-            #     new_pos.max_x += (pos.max_x - pos.min_x) / len(evaluations)
-            #     return _ops
+            new_pos = pos.copy()
             replay_buffer = []
             for evaluation in evaluations:
+                new_pos = new_pos.with_max_x(new_pos.x + col_width)
                 ops_adapter = NewPageReplayBuffer(ops)
-                evaluation.instr(ops_adapter, new_pos, evaluation.space, row_height=height)
-                new_pos.min_x += (pos.max_x - pos.min_x) / len(evaluations)
-                new_pos.max_x += (pos.max_x - pos.min_x) / len(evaluations)
-                replay_buffer.append(ops_adapter)
 
-            # ops_adapter = NewPageReplayBuffer(ops)
-            # evaluations.execute(ops, new_pos, postprocess, preprocess, row_height=height)
+                evaluation.instr(ops_adapter, new_pos, evaluation.space, row_height=height)
+
+                new_pos.x += col_width
+                new_pos.min_x += col_width
+
+                replay_buffer.append(ops_adapter)
+                new_pos.x += self.style.gap
 
             if len(flatten(replay_buffer)) > 0:
                 ops.add_page()
@@ -74,7 +75,7 @@ class TableRow(Writable):
 
                     col = col_writer.col(col_ref.style)
                     for item in col_items:
-                        item(col)
+                        item(col, col_ref.listener)
 
                 row = TableRow(col_writer, self.style, self.listener)
                 _space, _instr = row.evaluate(context)
@@ -105,8 +106,8 @@ class NewPageReplayBuffer(PDFOpsetAdapter, list):
         if not self.store:
             return super().add_text(text, coords, styling)
 
-        def wrapper(ops: PDFWriter):
-            ops.text(text, styling)
+        def wrapper(ops: PDFWriter, listener: PDFListener):
+            ops.text(text, styling, listener=listener)
 
         self.append(wrapper)
 
