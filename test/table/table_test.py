@@ -101,7 +101,7 @@ class TableTest(TestCase):
 
         script.paragraph("abcd" * 10)
 
-        script.render_as_file("sample.pdf", interceptor)
+        script.render_as_stream(interceptor)
         interceptor.save(f"{get_local_dir(__file__)}/test_different_col_height.txt")
 
     def test_too_long_col(self):

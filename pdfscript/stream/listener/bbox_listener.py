@@ -5,11 +5,11 @@ from pdfscript.__spi__.styles import RectStyle
 from pdfscript.__spi__.types import BoundingBox, Space
 
 
-class BBoxListener(PDFListener):
+class BBoxListener(PDFListener, list):
     def __init__(self, bbox_type: Optional[str] = None, draw: bool = False, seed=None):
+        super().__init__()
         self.type = bbox_type
         self.draw = draw
-        self.list = []
         self.seed = seed
 
     def on_space(self, space: Space, ops: PDFOpset):
@@ -25,4 +25,4 @@ class BBoxListener(PDFListener):
             color = f"rgb({r},{g},{b})"
             ops.draw_rect(bbox.x1, bbox.y1, bbox.x2, bbox.y2, RectStyle(fill_color=color, fill_opacity=0.1))
 
-        self.list.append((self.type, bbox))
+        self.append((self.type, bbox))
