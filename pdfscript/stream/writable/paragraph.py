@@ -35,6 +35,12 @@ class Paragraph(Text):
 
         def instr(ops: PDFOpset, pos: PDFPosition, get_space: SpaceSupplier):
             if self.style.layout in ["col2", "col3"]:
+                _, height = get_space(ops, pos)
+
+                if (pos.y - height) < pos.min_y:  # page overflow
+                    ops.add_page()
+                    pos.pos_zero()
+
                 splits = split_text_by_height(ops, self.style, pos, self.text, int(self.style.layout[-1]))
 
                 for is_first, is_last, split in iterate(splits):

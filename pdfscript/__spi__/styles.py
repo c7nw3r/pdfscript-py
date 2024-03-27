@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Literal
 
@@ -18,7 +18,7 @@ class TextStyle:
     font_size: int = 14
     align: Align = Align.LEFT
     color: Optional[str] = None
-    margin: Margin = Margin(0, 0, 0, 0)
+    margin: Margin = field(default_factory=lambda: Margin(0, 0, 0, 0))
     line_clamp: Optional[float] = None
     left_indent: Number = 0
 
@@ -41,12 +41,12 @@ class TextStyle:
 class ParagraphStyle(TextStyle):
     layout: Literal["block", "col2", "col3"] = "block"
     gap: Number = 0
-    margin: Margin = Margin(0, 0, 10, 0)
+    margin: Margin = field(default_factory=lambda: Margin(0, 0, 10, 0))
 
 
 @dataclass
 class TitleStyle(TextStyle):
-    margin: Margin = Margin(10, 0, 10, 0)
+    margin: Margin = field(default_factory=lambda: Margin(10, 0, 10, 0))
 
 
 @dataclass
@@ -55,27 +55,27 @@ class ImageStyle:
     height: int = 100
     align: Align = Align.CENTER
     display: Optional[Literal["block"]] = None
-    margin: Margin = Margin(0, 0, 0, 0)
+    margin: Margin = field(default_factory=lambda: Margin(0, 0, 0, 0))
 
 
 @dataclass
 class HStackStyle:
     align: Optional[Literal['center', 'justify', 'left', 'right']] = None
-    margin: Margin = Margin(0, 0, 0, 0)
+    margin: Margin = field(default_factory=lambda: Margin(0, 0, 0, 0))
     gap: Number = 10
 
 
 @dataclass
 class VStackStyle:
     gap: Number = 10
-    margin: Margin = Margin(0, 0, 0, 0)
+    margin: Margin = field(default_factory=lambda: Margin(0, 0, 0, 0))
     align: Align = Align.LEFT
 
 
 @dataclass
 class TableRowStyle:
     gap: Number = 0
-    margin: Margin = Margin(0, 0, 0, 0)
+    margin: Margin = field(default_factory=lambda: Margin(0, 0, 0, 0))
 
 
 @dataclass
@@ -86,8 +86,8 @@ class LineStyle:
 
 @dataclass
 class TableColStyle:
-    margin: Margin = Margin(5, 5, 5, 5)
-    border: LineStyle = LineStyle()
+    margin: Margin = field(default_factory=lambda: Margin(5, 5, 5, 5))
+    border: LineStyle = field(default_factory=lambda: LineStyle())
     # TODO: remove
     gap: Number = 0
 
